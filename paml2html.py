@@ -17,16 +17,21 @@ def main():
                         + "appended if it exists and created if it doesn't")
     parser.add_argument("--indent",
                         help="Provide the amount of spaces used for"
-                        + "indentation, 4 by default", type=int, default=4)
+                        + "indentation. Indentation is disabled by default",
+                        type=int, default=None)
     args = parser.parse_args()
     source_file = args.source_file
     destination_file = args.destination_file
-    indnt = ' ' * args.indent
+    if args.indent is not None:
+        indnt = ' ' * args.indent
 
     convert_from_file(source_file)
 
     with open(destination_file, 'a+', encoding='utf-8') as f:
-        f.write(indent(doc.getvalue(), indentation=indnt))
+        if args.indent is not None:
+            f.write(indent(doc.getvalue(), indentation=indnt))
+        elif args.indent is None:
+            f.write(doc.getvalue())
 
 
 def convert_from_file(filepath):
