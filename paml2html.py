@@ -2,7 +2,6 @@ from html import escape
 from yattag import Doc, indent
 import argparse
 
-# TODO: rewrite inline code, since it still makes links and HTML inside it
 
 doc, tag, text, line = Doc().ttl()
 
