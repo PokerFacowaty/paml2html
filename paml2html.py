@@ -406,7 +406,6 @@ def add_raw_html(paml_lines, i):
     doc.asis('\n')
     i += 1
     while i < len(paml_lines):
-        print(paml_lines[i])
         if paml_lines[i].strip() == '>':
             i += 1
             break
