@@ -74,6 +74,8 @@ def identify_element(paml_lines, i):
         i = add_ordered_list(paml_lines, i)
     elif paml_lines[i].lstrip().startswith('|'):
         i = add_table(paml_lines, i)
+    elif paml_lines[i].lstrip().startswith('<'):
+        i = add_raw_html(paml_lines, i)
     else:
         print('Unsupported line, skipping: ', paml_lines[i])
         i += 1  # fail-safe in case something is not recognized
@@ -397,6 +399,20 @@ def add_table(paml_lines, i):
                         with tag('td'):
                             doc.asis(format_txt(x.strip()))
                     i += 1
+    return i
+
+
+def add_raw_html(paml_lines, i):
+    doc.asis('\n')
+    i += 1
+    while i < len(paml_lines):
+        print(paml_lines[i])
+        if paml_lines[i].strip() == '>':
+            i += 1
+            break
+        else:
+            doc.asis(paml_lines[i])
+            i += 1
     return i
 
 
