@@ -125,7 +125,9 @@ def add_collapsible_box(paml_lines, i):
 
     with tag('div', klass=tag_class):
         while i < len(paml_lines):
-            if (paml_lines[i].lstrip()[0] != '>'
+            print(i, paml_lines[i])  # debug
+            if (paml_lines[i] == ''
+               or paml_lines[i].lstrip()[0] != '>'
                or paml_lines[i][0].lstrip() == '>'
                and paml_lines[i].lstrip()[1] != position):
                 break
