@@ -195,7 +195,9 @@ def add_code(paml_lines, i):
 
 
 def add_code_line(paml_lines, i):
-    if '/*' in paml_lines[i]:
+    if ('/*' in paml_lines[i]
+       and paml_lines[i][paml_lines[i].find('/*') + 2] != '*'):
+        # making sure '/**' isn't recognized as '/*' when '/*' is not there
         with tag('div', klass='line-code-comment'):
             doc.asis(format_txt(paml_lines[i]
                      [paml_lines[i].find('/*') + 2:
@@ -214,7 +216,9 @@ def add_code_line(paml_lines, i):
 
 
 def add_code_block(paml_lines, i):
-    if '/*' in paml_lines[i]:
+    if ('/*' in paml_lines[i]
+       and paml_lines[i][paml_lines[i].find('/*') + 2] != '*'):
+        # making sure '/**' isn't recognized as '/*' when '/*' is not there
         with tag('div', klass='block-code-comment'):
             doc.asis(format_txt(paml_lines[i]
                      [paml_lines[i].find('/*') + 2:
