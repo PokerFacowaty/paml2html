@@ -277,12 +277,12 @@ def add_paragraph(paml_lines, i):
         with tag('p'):
             text_to_add = ""
             while i < len(paml_lines):
-                if paml_lines[i].lstrip()[0] == "}":
+                if paml_lines[i].strip() == "}":
                     break
                 else:
-                    text_to_add += paml_lines[i].lstrip()
+                    text_to_add += paml_lines[i]
                 i += 1
-            text_to_add.replace('\n', ' ')
+            text_to_add = '<br>'.join(text_to_add.splitlines())
             doc.asis(format_txt(text_to_add))
     i += 1
     return i
