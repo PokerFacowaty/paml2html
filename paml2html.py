@@ -439,7 +439,12 @@ def format_txt(txt):
             if buffer:
                 txt_components.append(buffer)
                 buffer = ''
-            txt_components.append(txt[j:txt.rfind(')') + 1])
+            link_component = ''
+            # link_start and link_end refer to the actual link inside ()
+            link_start = j + txt[j:].find('](')
+            link_end = link_start + txt[link_start:].find(')')
+            link_component = txt[j:link_end + 1]
+            txt_components.append(link_component)
             j += len(txt_components[-1])
         elif j == len(txt) - 1:
             buffer += txt[j]
