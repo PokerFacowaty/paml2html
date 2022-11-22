@@ -480,8 +480,7 @@ def add_link(txt):
 
 def decorate_txt(txt):
     tags = {"**": ("<b>", "</b>"), "__": ("<i>", "</i>"),
-            "~~": ("<s>", "</s>"),
-            "``": ("<span class=\"inline-code\">", "</span>")}
+            "~~": ("<s>", "</s>")}
     result = txt
     i = 0
     while any((x in result for x in tags.keys())) and i < len(result):
