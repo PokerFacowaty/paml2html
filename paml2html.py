@@ -49,6 +49,24 @@ def convert_from_file(filepath):
     return doc.getvalue()
 
 
+def convert_from_text(paml_text):
+    '''Used when the converter is imported'''
+
+    global doc, tag, text, line
+    doc, tag, text, line = Doc().ttl()
+
+    paml_lines = paml_text.splitlines()
+    if paml_lines[-1] != '':
+        paml_lines[-1] += '\n'
+        paml_lines.append('')
+
+    i = 0
+    while i < len(paml_lines):
+        i = identify_element(paml_lines, i)
+
+    return doc.getvalue()
+
+
 def identify_element(paml_lines, i):
     # Wanted to switch it into a dict of identifiers, but the solution that
     # works for different lengths of starting points (e.x. '#' vs '```') that
