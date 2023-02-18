@@ -3,9 +3,6 @@ from yattag import Doc, indent
 import argparse
 
 
-doc, tag, text, line = Doc().ttl()
-
-
 def main():
     '''Used when calling the converter directly'''
     parser = argparse.ArgumentParser()
@@ -35,6 +32,10 @@ def main():
 
 def convert_from_file(filepath):
     '''Used when the converter is imported'''
+
+    global doc, tag, text, line
+    doc, tag, text, line = Doc().ttl()
+
     with open(filepath, 'r', encoding='utf-8') as p:
         paml_lines = p.readlines()
         if paml_lines[-1] != '':
