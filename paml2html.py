@@ -495,7 +495,7 @@ def add_inline_code(txt):
 
 
 def add_link(txt):
-    result = ("<a class=\"links\" target=\"_blank\" href="
+    result = ("<a target=\"_blank\" href="
               + f"\"{txt[txt.find('(') + 1:txt.find(')')]}\">"
               + f"{format_txt(txt[txt.find('[') + 1:txt.find(']')])}</a>")
     return result
