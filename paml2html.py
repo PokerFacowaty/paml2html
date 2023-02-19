@@ -293,7 +293,8 @@ def add_image(paml_lines, i):
 
 def add_paragraph(paml_lines, i):
     with tag('div', klass='paragraph'):
-        if paml_lines[i].lstrip()[1] == '!':
+        if (len(paml_lines[i].lstrip()) > 1
+           and paml_lines[i].lstrip()[1] == '!'):
             i = add_image(paml_lines, i)
         else:
             i += 1
