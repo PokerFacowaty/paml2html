@@ -38,7 +38,9 @@ def convert_from_file(filepath):
 
     with open(filepath, 'r', encoding='utf-8') as p:
         paml_lines = p.readlines()
-        if paml_lines[-1] != '':
+        if not paml_lines:
+            return ''
+        elif paml_lines[-1] != '':
             paml_lines[-1] += '\n'
             paml_lines.append('')
 
@@ -56,7 +58,9 @@ def convert_from_text(paml_text):
     doc, tag, text, line = Doc().ttl()
 
     paml_lines = paml_text.splitlines()
-    if paml_lines[-1] != '':
+    if not paml_lines:
+        return ''
+    elif paml_lines[-1] != '':
         paml_lines[-1] += '\n'
         paml_lines.append('')
 
