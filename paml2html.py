@@ -31,7 +31,7 @@ def main():
             f.write(doc.getvalue())
 
 
-def convert_from_file(filepath):
+def convert_from_file(filepath: Path) -> str:
     '''Used when the converter is imported'''
 
     global doc, tag, text, line
@@ -52,7 +52,7 @@ def convert_from_file(filepath):
     return doc.getvalue()
 
 
-def convert_from_text(paml_text):
+def convert_from_text(paml_text: str) -> str:
     '''Used when the converter is imported'''
 
     global doc, tag, text, line
@@ -72,7 +72,7 @@ def convert_from_text(paml_text):
     return doc.getvalue()
 
 
-def identify_element(paml_lines, i):
+def identify_element(paml_lines: list, i: int) -> int:
     # Wanted to switch it into a dict of identifiers, but the solution that
     # works for different lengths of starting points (e.x. '#' vs '```') that
     # I came up with was over 4 times slower than these elifs
@@ -108,7 +108,7 @@ def identify_element(paml_lines, i):
     return i
 
 
-def add_header(paml_lines, i):
+def add_header(paml_lines: list, i: int) -> int:
     if paml_lines[i].rstrip().startswith('# '):
         with tag('h1'):
             doc.asis(format_txt(paml_lines[i][2:-1]))
@@ -136,7 +136,7 @@ def add_header(paml_lines, i):
     return i
 
 
-def add_collapsible_box(paml_lines, i):
+def add_collapsible_box(paml_lines: list, i: int) -> int:
     tag_class = ''
     position = ''
     if paml_lines[i][1] == "l":
@@ -167,7 +167,7 @@ def add_collapsible_box(paml_lines, i):
     return i
 
 
-def add_collapsible(paml_lines, i, offset=0):
+def add_collapsible(paml_lines: list, i: int, offset=0) -> int:
     '''Starts a loop to add all elements to a collapsible. The amount of
        spaces at the beginning of every line is counted to establish the
        current 'offset' - line's indentation level. With 0 anywhere, the
@@ -213,7 +213,7 @@ def add_collapsible(paml_lines, i, offset=0):
     return i
 
 
-def add_command(paml_lines, i):
+def add_command(paml_lines: list, i: int) -> int:
     with tag('span', klass='command'):
         doc.asis(format_txt(paml_lines[i].lstrip()
                             [1:paml_lines[i].lstrip().find('/*')]).rstrip())
@@ -233,7 +233,7 @@ def add_command(paml_lines, i):
     return i
 
 
-def add_code(paml_lines, i):
+def add_code(paml_lines: list, i: int) -> int:
     if paml_lines[i + 2].rstrip().endswith('```'):
         # code line
         i = add_code_line(paml_lines, i)
@@ -244,7 +244,7 @@ def add_code(paml_lines, i):
     return i
 
 
-def add_code_line(paml_lines, i):
+def add_code_line(paml_lines: list, i: int) -> int:
     if ('/*' in paml_lines[i]
        and paml_lines[i][paml_lines[i].find('/*') + 2] != '*'):
         # making sure '/**' isn't recognized as '/*' when '/*' is not there
@@ -265,7 +265,7 @@ def add_code_line(paml_lines, i):
     return i
 
 
-def add_code_block(paml_lines, i):
+def add_code_block(paml_lines: list, i: int) -> int:
     if ('/*' in paml_lines[i]
        and paml_lines[i][paml_lines[i].find('/*') + 2] != '*'):
         # making sure '/**' isn't recognized as '/*' when '/*' is not there
@@ -295,7 +295,7 @@ def add_code_block(paml_lines, i):
     return i
 
 
-def add_image(paml_lines, i):
+def add_image(paml_lines: list, i: int) -> int:
     if paml_lines[i][0] == '{':
         line = paml_lines[i][1:]
     else:
@@ -318,7 +318,7 @@ def add_image(paml_lines, i):
     return i
 
 
-def add_paragraph(paml_lines, i):
+def add_paragraph(paml_lines: list, i: int) -> int:
     with tag('div', klass='paragraph'):
         if (len(paml_lines[i].lstrip()) > 1
            and paml_lines[i].lstrip()[1] == '!'):
@@ -339,7 +339,7 @@ def add_paragraph(paml_lines, i):
     return i
 
 
-def add_unordered_list(paml_lines, i, offset=None):
+def add_unordered_list(paml_lines: list, i: int, offset=None) -> int:
     if offset is None:
         # check where the list is positioned if it's not explicitly stated
         # this helps with e.x. lists inside collapsibles
@@ -382,7 +382,7 @@ def add_unordered_list(paml_lines, i, offset=None):
     return i
 
 
-def add_ordered_list(paml_lines, i, offset=None):
+def add_ordered_list(paml_lines: list, i: int, offset=None) -> int:
     numbers = '0123456789'
 
     if offset is None:
@@ -425,7 +425,7 @@ def add_ordered_list(paml_lines, i, offset=None):
     return i
 
 
-def add_table(paml_lines, i):
+def add_table(paml_lines: list, i: int) -> int:
     table_with_headers = True
     for cell in paml_lines[i + 1].split()[1:-1:2]:
         # [1:-1:2] - before first and after last not needed
@@ -458,7 +458,7 @@ def add_table(paml_lines, i):
     return i
 
 
-def add_raw_html(paml_lines, i):
+def add_raw_html(paml_lines: list, i: int) -> int:
     doc.asis('\n')
     i += 1
     while i < len(paml_lines):
@@ -472,7 +472,7 @@ def add_raw_html(paml_lines, i):
 
 
 # using "txt" to not mix it with yattag's text by accident
-def format_txt(txt):
+def format_txt(txt: str) -> str:
     # always send asis
     txt = txt.strip()
     result = ''
@@ -517,19 +517,19 @@ def format_txt(txt):
     return result
 
 
-def add_inline_code(txt):
+def add_inline_code(txt: str) -> str:
     result = ('<span class="inline-code">' + escape(txt[2:-2]) + "</span>")
     return result
 
 
-def add_link(txt):
+def add_link(txt: str) -> str:
     result = ("<a target=\"_blank\" href="
               + f"\"{txt[txt.find('(') + 1:txt.find(')')]}\">"
               + f"{format_txt(txt[txt.find('[') + 1:txt.find(']')])}</a>")
     return result
 
 
-def decorate_txt(txt):
+def decorate_txt(txt: str) -> str:
     tags = {"**": ("<b>", "</b>"), "__": ("<i>", "</i>"),
             "~~": ("<s>", "</s>")}
     result = txt
