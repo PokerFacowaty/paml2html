@@ -10,10 +10,10 @@ def main():
                         help="Provide a .paml file used for conversion")
     parser.add_argument("destination_file",
                         help="Provide an .html destination file. It will be"
-                        + "appended if it exists and created if it doesn't")
+                        + " appended if it exists and created if it doesn't")
     parser.add_argument("--indent",
                         help="Provide the amount of spaces used for"
-                        + "indentation. Indentation is disabled by default",
+                        + " indentation. Indentation is disabled by default",
                         type=int, default=None)
     args = parser.parse_args()
     source_file = args.source_file
