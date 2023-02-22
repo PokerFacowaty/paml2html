@@ -1,4 +1,5 @@
 from html import escape
+from pathlib import Path
 from yattag import Doc, indent
 import argparse
 
@@ -16,8 +17,8 @@ def main():
                         + " indentation. Indentation is disabled by default",
                         type=int, default=None)
     args = parser.parse_args()
-    source_file = args.source_file
-    destination_file = args.destination_file
+    source_file = Path(args.source_file)
+    destination_file = Path(args.destination_file)
     if args.indent is not None:
         indnt = ' ' * args.indent
 
