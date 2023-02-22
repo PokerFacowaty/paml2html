@@ -81,6 +81,8 @@ def identify_element(paml_lines, i):
     elif paml_lines[i].lstrip().startswith('#'):
         i = add_header(paml_lines, i)
     elif paml_lines[i].lstrip().startswith('>'):
+        # '>' by itself does not necessarily mean a collapsible box, but all
+        # the other cases nested collapsibles are handled by add_collapsible
         i = add_collapsible_box(paml_lines, i)
     elif paml_lines[i].lstrip().startswith('/'):
         i = add_command(paml_lines, i)
@@ -148,7 +150,7 @@ def add_collapsible_box(paml_lines, i):
 
     with tag('div', klass=tag_class):
         while i < len(paml_lines):
-            if (paml_lines[i] == ''
+            if (not paml_lines[i].lstrip()
                or paml_lines[i].lstrip()[0] != '>'
                or paml_lines[i][0].lstrip() == '>'
                and paml_lines[i].lstrip()[1] != position):
@@ -164,10 +166,21 @@ def add_collapsible_box(paml_lines, i):
 
 
 def add_collapsible(paml_lines, i, offset=0):
+    '''Starts a loop to add all elements to a collapsible. The amount of
+       spaces at the beginning of every line is counted to establish the
+       current 'offset' - line's indentation level. With 0 anywhere, the
+       collapsible (and the while loop) is terminated; an offset higher than
+       current indicates a new indentation level that is then updated; a level
+       lower than current but higher than 0 means an ending of a nested
+       collapsible.
+
+       Afterwards, there is a check for a special case of a nested collapsible
+       (skipping identify_element since that would identify the > as
+       a collapsible box that's useless since the collapsible already is in
+       a box made for the outmost collapsibles). identify_element is instead
+       called for every item that is not a collapsible.'''
+
     while i < len(paml_lines):
-        if paml_lines[i] == '\n':
-            i += 1
-            continue
 
         spaces = 0
         for char in paml_lines[i]:
@@ -178,9 +191,20 @@ def add_collapsible(paml_lines, i, offset=0):
 
         if spaces == 0:
             break
-        elif spaces != offset:
+        elif spaces > offset:
             offset = spaces
-        elif spaces == offset:
+        elif spaces < offset:
+            return i
+
+        if paml_lines[i].lstrip()[0] == ">":
+            with tag('details'):
+                with tag('summary', klass='header'):
+                    with tag('span', klass='icon'):
+                        text(paml_lines[i].lstrip()[2])
+                    text(paml_lines[i].lstrip()[3:].rstrip())
+                    i += 1
+                i = add_collapsible(paml_lines, i, offset)
+        else:
             with tag('div', klass='entry'):
                 i = identify_element(paml_lines, i)
     return i
