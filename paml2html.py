@@ -157,8 +157,9 @@ def add_collapsible_box(paml_lines, i):
                 break
             with tag('details'):
                 with tag('summary', klass='header'):
-                    with tag('span', klass='icon'):
-                        text(paml_lines[i].lstrip()[2])
+                    if paml_lines[i].lstrip()[2] != " ":
+                        with tag('span', klass='icon'):
+                            text(paml_lines[i].lstrip()[2])
                     text(paml_lines[i].lstrip()[3:].rstrip())
                     i += 1
                 i = add_collapsible(paml_lines, i)
@@ -199,8 +200,9 @@ def add_collapsible(paml_lines, i, offset=0):
         if paml_lines[i].lstrip()[0] == ">":
             with tag('details'):
                 with tag('summary', klass='header'):
-                    with tag('span', klass='icon'):
-                        text(paml_lines[i].lstrip()[2])
+                    if paml_lines[i].lstrip()[2] != " ":
+                        with tag('span', klass='icon'):
+                            text(paml_lines[i].lstrip()[2])
                     text(paml_lines[i].lstrip()[3:].rstrip())
                     i += 1
                 i = add_collapsible(paml_lines, i, offset)
