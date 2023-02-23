@@ -245,53 +245,55 @@ def add_code(paml_lines: list, i: int) -> int:
 
 
 def add_code_line(paml_lines: list, i: int) -> int:
-    if ('/*' in paml_lines[i]
-       and paml_lines[i][paml_lines[i].find('/*') + 2] != '*'):
-        # making sure '/**' isn't recognized as '/*' when '/*' is not there
-        with tag('div', klass='line-code-comment'):
-            doc.asis(format_txt(paml_lines[i]
-                     [paml_lines[i].find('/*') + 2:
-                     paml_lines[i].find('*/')].strip()))
+    with tag('div', klass='line-code-box'):
+        if ('/*' in paml_lines[i]
+           and paml_lines[i][paml_lines[i].find('/*') + 2] != '*'):
+            # making sure '/**' isn't recognized as '/*' when '/*' is not there
+            with tag('div', klass='line-code-comment'):
+                doc.asis(format_txt(paml_lines[i]
+                         [paml_lines[i].find('/*') + 2:
+                         paml_lines[i].find('*/')].strip()))
 
-    if '/**' in paml_lines[i]:
-        with tag('div', klass='line-code-small-comment'):
-            doc.asis(format_txt(paml_lines[i]
-                     [paml_lines[i].find('/**') + 3:
-                     paml_lines[i].find('**/')].strip()))
-    i += 1
-    with tag('code', klass='line-code'):
-        text(paml_lines[i].lstrip())
-    i += 2
+        if '/**' in paml_lines[i]:
+            with tag('div', klass='line-code-small-comment'):
+                doc.asis(format_txt(paml_lines[i]
+                         [paml_lines[i].find('/**') + 3:
+                         paml_lines[i].find('**/')].strip()))
+        i += 1
+        with tag('code', klass='line-code'):
+            text(paml_lines[i].lstrip())
+        i += 2
     return i
 
 
 def add_code_block(paml_lines: list, i: int) -> int:
-    if ('/*' in paml_lines[i]
-       and paml_lines[i][paml_lines[i].find('/*') + 2] != '*'):
-        # making sure '/**' isn't recognized as '/*' when '/*' is not there
-        with tag('div', klass='block-code-comment'):
-            doc.asis(format_txt(paml_lines[i]
-                     [paml_lines[i].find('/*') + 2:
-                     paml_lines[i].find('*/')].strip()))
+    with tag('div', klass='block-code-box'):
+        if ('/*' in paml_lines[i]
+           and paml_lines[i][paml_lines[i].find('/*') + 2] != '*'):
+            # making sure '/**' isn't recognized as '/*' when '/*' is not there
+            with tag('div', klass='block-code-comment'):
+                doc.asis(format_txt(paml_lines[i]
+                         [paml_lines[i].find('/*') + 2:
+                         paml_lines[i].find('*/')].strip()))
 
-    if '/**' in paml_lines[i]:
-        with tag('div', klass='block-code-small-comment'):
-            doc.asis(format_txt(paml_lines[i]
-                     [paml_lines[i].find('/**') + 3:
-                     paml_lines[i].find('**/')].strip()))
-    i += 1
-    code_to_add = []
-    while i < len(paml_lines):
-        if paml_lines[i].strip() == '```':
-            # code_to_add.append(paml_lines[i][:paml_lines[i].find('```')])
-            with tag('code', klass='block-code'):
-                with tag('pre'):
-                    text(''.join(code_to_add))
-            i += 1
-            break
-        else:
-            code_to_add.append(paml_lines[i])
+        if '/**' in paml_lines[i]:
+            with tag('div', klass='block-code-small-comment'):
+                doc.asis(format_txt(paml_lines[i]
+                         [paml_lines[i].find('/**') + 3:
+                         paml_lines[i].find('**/')].strip()))
         i += 1
+        code_to_add = []
+        while i < len(paml_lines):
+            if paml_lines[i].strip() == '```':
+                # code_to_add.append(paml_lines[i][:paml_lines[i].find('```')])
+                with tag('code', klass='block-code'):
+                    with tag('pre'):
+                        text(''.join(code_to_add))
+                i += 1
+                break
+            else:
+                code_to_add.append(paml_lines[i])
+            i += 1
     return i
 
 
