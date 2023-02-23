@@ -214,20 +214,21 @@ def add_collapsible(paml_lines: list, i: int, offset=0) -> int:
 
 
 def add_command(paml_lines: list, i: int) -> int:
-    with tag('span', klass='command'):
-        doc.asis(format_txt(paml_lines[i].lstrip()
-                            [1:paml_lines[i].lstrip().find('/*')]).rstrip())
+    with tag('div', klass='command-box'):
+        with tag('span', klass='command'):
+            doc.asis(format_txt(paml_lines[i].lstrip()
+                     [1:paml_lines[i].lstrip().find('/*')]).rstrip())
 
-    if '/*' in paml_lines[i]:
-        with tag('span', klass='same-line-comment'):
-            doc.asis(format_txt(paml_lines[i]
-                                [paml_lines[i].find('/*') + 2:
-                                 paml_lines[i].find('*/')]))
-    if '/**' in paml_lines[i]:
-        with tag('div', klass='small-comment'):
-            doc.asis(format_txt(paml_lines[i]
-                                [paml_lines[i].find('/**') + 3:
-                                 paml_lines[i].find('**/')]))
+        if '/*' in paml_lines[i]:
+            with tag('span', klass='same-line-comment'):
+                doc.asis(format_txt(paml_lines[i]
+                                    [paml_lines[i].find('/*') + 2:
+                                    paml_lines[i].find('*/')]))
+        if '/**' in paml_lines[i]:
+            with tag('div', klass='small-comment'):
+                doc.asis(format_txt(paml_lines[i]
+                                    [paml_lines[i].find('/**') + 3:
+                                    paml_lines[i].find('**/')]))
 
     i += 1
     return i
