@@ -5,7 +5,10 @@ import argparse
 
 
 def main():
-    '''Used when calling the converter directly'''
+    '''Used when calling the converter directly, parses arguments from the
+       command line and sends the input filepath to convert_from_file, then
+       writes HTML to the output file'''
+
     parser = argparse.ArgumentParser()
     parser.add_argument("source_file",
                         help="Provide a .paml file used for conversion")
@@ -19,6 +22,7 @@ def main():
     args = parser.parse_args()
     source_file = Path(args.source_file)
     destination_file = Path(args.destination_file)
+
     if args.indent is not None:
         indnt = ' ' * args.indent
 
@@ -31,8 +35,8 @@ def main():
             f.write(doc.getvalue())
 
 
-def convert_from_file(filepath: Path) -> str:
-    '''Used when the converter is imported'''
+def convert_from_file(filepath):
+    '''Used when the converter is imported, returns a string containing HTML'''
 
     global doc, tag, text, line
     doc, tag, text, line = Doc().ttl()
@@ -52,13 +56,14 @@ def convert_from_file(filepath: Path) -> str:
     return doc.getvalue()
 
 
-def convert_from_text(paml_text: str) -> str:
-    '''Used when the converter is imported'''
+def convert_from_text(paml_text):
+    '''Used when the converter is imported, returns a string containing HTML'''
 
     global doc, tag, text, line
     doc, tag, text, line = Doc().ttl()
 
     paml_lines = paml_text.splitlines()
+
     if not paml_lines:
         return ''
     elif paml_lines[-1] != '':
@@ -73,9 +78,12 @@ def convert_from_text(paml_text: str) -> str:
 
 
 def identify_element(paml_lines: list, i: int) -> int:
-    # Wanted to switch it into a dict of identifiers, but the solution that
-    # works for different lengths of starting points (e.x. '#' vs '```') that
-    # I came up with was over 4 times slower than these elifs
+    '''Identifies the element on the current line or skips the line. I wanted
+       to switch the ifs into something 'smarter' like a dict of identifiers,
+       but because of different lengths of identifiers, the best solution I
+       could come up with was over 4 times slower. In terms of readability, the
+       ifs are probably fine.'''
+
     if paml_lines[i].strip() == '':
         # only spaces and \n on the line
         i += 1
@@ -137,6 +145,9 @@ def add_header(paml_lines: list, i: int) -> int:
 
 
 def add_collapsible_box(paml_lines: list, i: int) -> int:
+    '''Makes a div that is a box holding together all collapsibles of a single
+       type placed one after another.'''
+
     tag_class = ''
     position = ''
     if paml_lines[i][1] == "l":
@@ -183,7 +194,6 @@ def add_collapsible(paml_lines: list, i: int, offset=0) -> int:
        called for every item that is not a collapsible.'''
 
     while i < len(paml_lines):
-
         spaces = 0
         for char in paml_lines[i]:
             if char == ' ':
@@ -343,6 +353,9 @@ def add_paragraph(paml_lines: list, i: int) -> int:
 
 
 def add_unordered_list(paml_lines: list, i: int, offset=None) -> int:
+    '''Makes use of an offset to determine nested lists and lists inside
+       collapsibles.'''
+
     if offset is None:
         # check where the list is positioned if it's not explicitly stated
         # this helps with e.x. lists inside collapsibles
@@ -386,6 +399,9 @@ def add_unordered_list(paml_lines: list, i: int, offset=None) -> int:
 
 
 def add_ordered_list(paml_lines: list, i: int, offset=None) -> int:
+    '''Makes use of an offset to determine nested lists and lists inside
+       collapsibles.'''
+
     numbers = '0123456789'
 
     if offset is None:
@@ -430,6 +446,7 @@ def add_ordered_list(paml_lines: list, i: int, offset=None) -> int:
 
 def add_table(paml_lines: list, i: int) -> int:
     table_with_headers = True
+
     for cell in paml_lines[i + 1].split()[1:-1:2]:
         # [1:-1:2] - before first and after last not needed
         # every other to skip the dividers
@@ -464,6 +481,7 @@ def add_table(paml_lines: list, i: int) -> int:
 def add_raw_html(paml_lines: list, i: int) -> int:
     doc.asis('\n')
     i += 1
+
     while i < len(paml_lines):
         if paml_lines[i].strip() == '>':
             i += 1
@@ -474,9 +492,11 @@ def add_raw_html(paml_lines: list, i: int) -> int:
     return i
 
 
-# using "txt" to not mix it with yattag's text by accident
 def format_txt(txt: str) -> str:
-    # always send asis
+    '''Using txt in the names to never accidentally mix it with yattag's 'text'
+       by accident. All text sent into this function should already be inside
+       yattag's doc.asis() function.'''
+
     txt = txt.strip()
     result = ''
     txt_components = []
@@ -553,8 +573,9 @@ def decorate_txt(txt: str) -> str:
             result = (result[:i] + tags[result[i:i + 2]][0]
                       + result[i + 2:tag_end] + tags[result[i:i + 2]][1]
                       + result[tag_end + 2:])
-            # + 2 because of the length of **, __, ~~ etc might need rewriting,
-            # but will work for now
+            # i + 2 since all tags have a length of 2 (like **) and it's easier
+            # than making a solution for all lengths that's useless for now
+            # will need rewriting if longer tags are needed
         i += 1
     return result
 
