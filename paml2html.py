@@ -62,7 +62,7 @@ def convert_from_text(paml_text):
     global doc, tag, text, line
     doc, tag, text, line = Doc().ttl()
 
-    paml_lines = paml_text.splitlines()
+    paml_lines = paml_text.splitlines(True)
 
     if not paml_lines:
         return ''
