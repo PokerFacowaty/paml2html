@@ -81,7 +81,37 @@ class TestPaml(unittest.TestCase):
 
     # Collapsibles
 
-    # Collapsible-specific content
+    def test_l_collapsible_box(self):
+        coll = ['>l➤ irssi\n', '    ![alt text](./image.png)\n', '    ```/* Auto connect */ /** Connects, small comment **/\n', '    server add -ssl -auto -network {network} {link} {port}\n', '    ```\n', '    {![alt text](image.png)\n', '        some text\n', '    }\n', '']
+        expected = '''<div class="collapsible-box-half-left"><details><summary class="header"><span class="icon">➤</span> irssi</summary><div class="entry"><img alt="alt text" src="./image.png" /></div><div class="entry"><div class="line-code-box"><div class="line-code-comment">Auto connect</div><div class="line-code-small-comment">Connects, small comment</div><code class="line-code">server add -ssl -auto -network {network} {link} {port}
+</code></div></div><div class="entry"><div class="paragraph"><img alt="alt text" src="image.png" /><p>some text</p></div></div></details></div>'''
+        paml2html.add_collapsible_box(coll, 0)
+        result = paml2html.doc.getvalue()
+        (paml2html.doc, paml2html.tag,
+         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
+        self.assertEqual(result, expected)
+
+    def test_r_collapsible_box_without_icon(self):
+        coll = ['>r irssi\n', '    ```/* break vs continue *//**Small block code comment **/\n', 'for x in "abcd":\n', '    if x == "c":\n', '        break\n', '    print(x)  # a, b\n', '    ```\n', '    /Ctrl + E /* Clear the screen */ /** Small comment **/\n', '']
+        expected = '''<div class="collapsible-box-half-right"><details><summary class="header">irssi</summary><div class="entry"><div class="block-code-box"><div class="block-code-comment">break vs continue</div><div class="block-code-small-comment">Small block code comment</div><code class="block-code"><pre>for x in "abcd":
+    if x == "c":
+        break
+    print(x)  # a, b
+</pre></code></div></div><div class="entry"><div class="command-box"><span class="command">Ctrl + E</span><span class="same-line-comment">Clear the screen</span><div class="small-comment">Small comment</div></div></div></details></div>'''
+        paml2html.add_collapsible_box(coll, 0)
+        result = paml2html.doc.getvalue()
+        (paml2html.doc, paml2html.tag,
+         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
+        self.assertEqual(result, expected)
+
+    def test_nested_collapsible(self):
+        coll = ['>l➤ collapsible\n', '    >l➤ nested collapsible\n', '        /Ctrl + E /* Clear the screen */ /** Small comment **/\n', '        >l➤ second nested collapsible\n', '    >l nested collapsible\n', '']
+        expected = '<div class="collapsible-box-half-left"><details><summary class="header"><span class="icon">➤</span> collapsible</summary><details><summary class="header"><span class="icon">➤</span> nested collapsible</summary><div class="entry"><div class="command-box"><span class="command">Ctrl + E</span><span class="same-line-comment">Clear the screen</span><div class="small-comment">Small comment</div></div></div><details><summary class="header"><span class="icon">➤</span> second nested collapsible</summary></details></details><details><summary class="header">nested collapsible</summary></details></details></div>'
+        paml2html.add_collapsible_box(coll, 0)
+        result = paml2html.doc.getvalue()
+        (paml2html.doc, paml2html.tag,
+         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
+        self.assertEqual(result, expected)
 
     # Code block
 
