@@ -418,7 +418,7 @@ def add_ordered_list(paml_lines: list, i: int, offset=None) -> int:
 
     with tag('ol'):
         while i < len(paml_lines):
-            if paml_lines[i] == '\n':
+            if paml_lines[i].strip() == '':
                 break
             elif (paml_lines[i].lstrip()[0] not in numbers
                   and paml_lines[i].lstrip()[0] != '-'):
