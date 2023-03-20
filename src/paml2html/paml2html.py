@@ -435,7 +435,8 @@ def add_ordered_list(paml_lines: list, i: int, offset=None) -> int:
                 offset = spaces
                 break
             elif paml_lines[i][offset] in numbers:
-                line('li', format_txt(paml_lines[i][offset + 2:-1]))
+                with tag('li'):
+                    doc.asis(format_txt(paml_lines[i][offset + 2:-1]))
                 i += 1
             elif paml_lines[i][offset] == '-':
                 i = add_unordered_list(paml_lines, i)
