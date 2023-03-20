@@ -332,9 +332,15 @@ with a comment.
 
     # Raw HTML
 
-    # Text elements
+    # Text formatting
 
-    # Text formatting as a whole
+    def test_text_formatting(self):
+        text = '**This is bold __and now also italics** but not bold anymore__, ``while **this** __is__ all <code>`` and __this is a [link in italics](https://pokerfacowaty.com)__'
+        expected = ''''<b>This is bold <i>and now also italics</b> but not bold anymore</i>, <span class="inline-code">while **this** __is__ all &lt;code&gt;</span> and <i>this is a <a target="_blank" href="https://pokerfacowaty.com">link in italics</a></i>'''
+        result = paml2html.format_txt(text)
+        (paml2html.doc, paml2html.tag,
+         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
+        self.assertEqual(result, expected)
 
 
 if __name__ == '__main__':
