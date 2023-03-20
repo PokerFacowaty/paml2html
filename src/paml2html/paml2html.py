@@ -3,6 +3,8 @@ from pathlib import Path
 from yattag import Doc, indent
 import argparse
 
+doc, tag, text, line = Doc().ttl()
+
 
 def main():
     '''Used when calling the converter directly, parses arguments from the
