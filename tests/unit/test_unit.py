@@ -131,6 +131,12 @@ with a comment.
 with a comment.
 </pre></code></div>'''
 
+        paml2html.add_code_block(block, 0)
+        self.assertEqual(paml2html.doc.getvalue(), expected)
+
+        (paml2html.doc, paml2html.tag,
+         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
+
     # Images
 
     # Paragraphs
