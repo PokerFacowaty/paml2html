@@ -139,6 +139,16 @@ with a comment.
 
     # Images
 
+    def test_image(self):
+        image = ['![alt text](image.png)\n', '']
+        expected = '<img alt="alt text" src="image.png" />'
+
+        paml2html.add_image(image, 0)
+        self.assertEqual(paml2html.doc.getvalue(), expected)
+
+        (paml2html.doc, paml2html.tag,
+         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
+
     # Paragraphs
 
     # Unordered lists + content
