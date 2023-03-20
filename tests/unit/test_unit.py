@@ -178,6 +178,9 @@ with a comment.
         self.assertEqual(result, expected)
 
     def test_multi_line_paragraph_with_indentation(self):
+        # The output should look exactly the same, as the indentation is only
+        # for visual purposes
+
         para = ['{\n', '    Paragraph with 4 spaces\n', '\n',
                 '    Second paragraph with 4 spaces\n', '}\n', '']
         expected = '<div class="paragraph"><p>Paragraph with 4 spaces<br><br>Second paragraph with 4 spaces</p></div>'
@@ -189,7 +192,43 @@ with a comment.
 
     # Unordered lists + content
 
+    def test_unordered_list(self):
+        ulist = ['- Element 1\n', '- Element 2\n', '- Element 3\n', '']
+        expected = '<ul><li>Element 1</li><li>Element 2</li><li>Element 3</li></ul>'
+        paml2html.add_unordered_list(ulist, 0)
+        result = paml2html.doc.getvalue()
+        (paml2html.doc, paml2html.tag,
+         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
+        self.assertEqual(result, expected)
+
+    def test_unordered_list_with_simple_content(self):
+        ulist = ['- **Bold element**\n',
+                 '- __Italic element__\n',
+                 '- ``Inline code``\n',
+                 '- [link](https://pokerfacowaty.com)\n', '']
+        expected = '<ul><li><b>Bold element</b></li><li><i>Italic element</i></li><li><span class="inline-code">Inline code</span></li><li><a target="_blank" href="https://pokerfacowaty.com">link</a></li></ul>'
+        paml2html.add_unordered_list(ulist, 0)
+        result = paml2html.doc.getvalue()
+        (paml2html.doc, paml2html.tag,
+         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
+        self.assertEqual(result, expected)
+
+    def test_unordered_list_with_mixed_content(self):
+        ulist = ['- **__Text in bold and italics__**\n',
+                 '- **__Kinda same but not really**__\n',
+                 '- ``Code __ignoring__ **special** chars``\n',
+                 '- [**link in bold**](https://pokerfacowaty.com)\n',
+                 '- [**__link bold both__**](https://pokerfacowaty.com)\n', '']
+        expected = '<ul><li><b><i>Text in bold and italics</i></b></li><li><b><i>Kinda same but not really</b></i></li><li><span class="inline-code">Code __ignoring__ **special** chars</span></li><li><a target="_blank" href="https://pokerfacowaty.com"><b>link in bold</b></a></li><li><a target="_blank" href="https://pokerfacowaty.com"><b><i>link bold both</i></b></a></li></ul>'
+        paml2html.add_unordered_list(ulist, 0)
+        result = paml2html.doc.getvalue()
+        (paml2html.doc, paml2html.tag,
+         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
+        self.assertEqual(result, expected)
+
     # Ordered lists + content
+
+    # Mixed lists
 
     # Tables
 
