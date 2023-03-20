@@ -190,6 +190,24 @@ with a comment.
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
         self.assertEqual(result, expected)
 
+    def test_paragraph_with_left_picture(self):
+        para = ['{!l[alt text](image.png)\n', 'some text\n', '}\n', '']
+        expected = '<div class="paragraph"><img alt="alt text" src="image.png" class="img-half-left" /><p>some text</p></div>'
+        paml2html.add_paragraph(para, 0)
+        result = paml2html.doc.getvalue()
+        (paml2html.doc, paml2html.tag,
+         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
+        self.assertEqual(result, expected)
+
+    def test_paragraph_with_right_picture(self):
+        para = ['{!r[alt text](image.png)\n', 'some text\n', '}\n', '']
+        expected = '<div class="paragraph"><img alt="alt text" src="image.png" class="img-half-right" /><p>some text</p></div>'
+        paml2html.add_paragraph(para, 0)
+        result = paml2html.doc.getvalue()
+        (paml2html.doc, paml2html.tag,
+         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
+        self.assertEqual(result, expected)
+
     # Unordered lists + content
 
     def test_unordered_list(self):
