@@ -511,6 +511,36 @@ class TestPaml(unittest.TestCase):
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
         self.assertEqual(result, expected)
 
+    def test_unordered_list_nested(self):
+        ulist = ['- Element 1\n',
+                 '    - Subelement\n',
+                 '- Element 2\n', '']
+        expected = ('<ul><li>Element 1</li>'
+                    + '<ul><li>Subelement</li></ul>'
+                    + '<li>Element 2</li></ul>')
+        paml2html.add_unordered_list(ulist, 0)
+        result = paml2html.doc.getvalue()
+        (paml2html.doc, paml2html.tag,
+         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
+        self.assertEqual(result, expected)
+
+    def test_unordered_list_nested_two_levels(self):
+        ulist = ['- Element 1\n',
+                 '    - Subelement 1\n',
+                 '        - Subsubelement\n',
+                 '    - Subelement 2\n',
+                 '- Element 2\n', '']
+        expected = ('<ul><li>Element 1</li>'
+                    + '<ul><li>Subelement 1</li>'
+                    + '<ul><li>Subsubelement</li></ul>'
+                    + '<li>Subelement 2</li></ul>'
+                    + '<li>Element 2</li></ul>')
+        paml2html.add_unordered_list(ulist, 0)
+        result = paml2html.doc.getvalue()
+        (paml2html.doc, paml2html.tag,
+         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
+        self.assertEqual(result, expected)
+
     # Ordered lists
 
     def test_ordered_list_with_single_element(self):
