@@ -312,7 +312,7 @@ class TestPaml(unittest.TestCase):
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
         self.assertEqual(result, expected)
 
-    def test_code_block_comment(self):
+    def test_code_block_with_comment(self):
         block = ['```/* Comment */\n',
                  'This is a code block\n',
                  'with a comment.\n',
@@ -329,7 +329,7 @@ class TestPaml(unittest.TestCase):
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
         self.assertEqual(result, expected)
 
-    def test_code_block_small_comment_only(self):
+    def test_code_block_with_small_comment(self):
         block = ['```/** Small comment **/\n',
                  'This is a code block\n',
                  'with a comment.\n',
@@ -347,7 +347,7 @@ class TestPaml(unittest.TestCase):
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
         self.assertEqual(result, expected)
 
-    def test_code_block_both_comments(self):
+    def test_code_block_with_both_comments(self):
         block = ['```/** Small comment **/\n',
                  'This is a code block\n',
                  'with a comment.\n',
