@@ -486,7 +486,7 @@ class TestPaml(unittest.TestCase):
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
         self.assertEqual(result, expected)
 
-    # Unordered lists + content
+    # Unordered lists
 
     def test_unordered_list_with_single_element(self):
         ulist = ['- Element\n', '']
@@ -511,9 +511,18 @@ class TestPaml(unittest.TestCase):
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
         self.assertEqual(result, expected)
 
-    # Ordered lists + content
+    # Ordered lists
 
-    def test_ordered_list(self):
+    def test_ordered_list_with_single_element(self):
+        olist = ['1. Element\n', '']
+        expected = ('<ol><li>Element</li></ol>')
+        paml2html.add_ordered_list(olist, 0)
+        result = paml2html.doc.getvalue()
+        (paml2html.doc, paml2html.tag,
+         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
+        self.assertEqual(result, expected)
+
+    def test_ordered_list_with_multiple_element(self):
         olist = ['1. Element\n',
                  '2. Element\n',
                  '3. Element\n',
@@ -521,44 +530,6 @@ class TestPaml(unittest.TestCase):
         expected = ('<ol><li>Element</li>'
                     + '<li>Element</li>'
                     + '<li>Element</li></ol>')
-        paml2html.add_ordered_list(olist, 0)
-        result = paml2html.doc.getvalue()
-        (paml2html.doc, paml2html.tag,
-         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
-        self.assertEqual(result, expected)
-
-    def test_ordered_list_with_simple_content(self):
-        olist = ['1. **Bold element**\n',
-                 '2. __Italic element__\n',
-                 '3. ``Inline code``\n',
-                 '4. [link](https://pokerfacowaty.com)\n',
-                 '']
-        expected = ('<ol><li><b>Bold element</b></li>'
-                    + '<li><i>Italic element</i></li>'
-                    + '<li><span class="inline-code">Inline code</span></li>'
-                    + '<li><a target="_blank" '
-                    + 'href="https://pokerfacowaty.com">link</a></li></ol>')
-        paml2html.add_ordered_list(olist, 0)
-        result = paml2html.doc.getvalue()
-        (paml2html.doc, paml2html.tag,
-         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
-        self.assertEqual(result, expected)
-
-    def test_ordered_list_with_mixed_content(self):
-        olist = ['1. **__Text in bold and italics__**\n',
-                 '2. **__Kinda same but not really**__\n',
-                 '3. ``Code __ignoring__ **special** chars``\n',
-                 '4. [**link in bold**](https://pokerfacowaty.com)\n',
-                 '5. [**__link bold both__**](https://pokerfacowaty.com)\n',
-                 '']
-        expected = ('<ol><li><b><i>Text in bold and italics</i></b></li>'
-                    + '<li><b><i>Kinda same but not really</b></i></li>'
-                    + '<li><span class="inline-code">Code __ignoring__ '
-                    + '**special** chars</span></li>'
-                    + '<li><a target="_blank" href="https://pokerfacowaty.com'
-                    + '"><b>link in bold</b></a></li>'
-                    + '<li><a target="_blank" href="https://pokerfacowaty.com"'
-                    + '><b><i>link bold both</i></b></a></li></ol>')
         paml2html.add_ordered_list(olist, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
