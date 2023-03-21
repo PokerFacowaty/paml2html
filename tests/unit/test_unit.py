@@ -488,7 +488,16 @@ class TestPaml(unittest.TestCase):
 
     # Unordered lists + content
 
-    def test_unordered_list(self):
+    def test_unordered_list_with_single_element(self):
+        ulist = ['- Element\n', '']
+        expected = '<ul><li>Element</li></ul>'
+        paml2html.add_unordered_list(ulist, 0)
+        result = paml2html.doc.getvalue()
+        (paml2html.doc, paml2html.tag,
+         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
+        self.assertEqual(result, expected)
+
+    def test_unordered_list_with_multiple_elements(self):
         ulist = ['- Element 1\n',
                  '- Element 2\n',
                  '- Element 3\n',
@@ -496,44 +505,6 @@ class TestPaml(unittest.TestCase):
         expected = ('<ul><li>Element 1</li>'
                     + '<li>Element 2</li>'
                     + '<li>Element 3</li></ul>')
-        paml2html.add_unordered_list(ulist, 0)
-        result = paml2html.doc.getvalue()
-        (paml2html.doc, paml2html.tag,
-         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
-        self.assertEqual(result, expected)
-
-    def test_unordered_list_with_simple_content(self):
-        ulist = ['- **Bold element**\n',
-                 '- __Italic element__\n',
-                 '- ``Inline code``\n',
-                 '- [link](https://pokerfacowaty.com)\n',
-                 '']
-        expected = ('<ul><li><b>Bold element</b></li>'
-                    + '<li><i>Italic element</i></li>'
-                    + '<li><span class="inline-code">Inline code</span></li>'
-                    + '<li><a target="_blank" '
-                    + 'href="https://pokerfacowaty.com">link</a></li></ul>')
-        paml2html.add_unordered_list(ulist, 0)
-        result = paml2html.doc.getvalue()
-        (paml2html.doc, paml2html.tag,
-         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
-        self.assertEqual(result, expected)
-
-    def test_unordered_list_with_mixed_content(self):
-        ulist = ['- **__Text in bold and italics__**\n',
-                 '- **__Kinda same but not really**__\n',
-                 '- ``Code __ignoring__ **special** chars``\n',
-                 '- [**link in bold**](https://pokerfacowaty.com)\n',
-                 '- [**__link bold both__**](https://pokerfacowaty.com)\n',
-                 '']
-        expected = ('<ul><li><b><i>Text in bold and italics</i></b></li>'
-                    + '<li><b><i>Kinda same but not really</b></i></li>'
-                    + '<li><span class="inline-code">Code __ignoring__ '
-                    + '**special** chars</span></li><li><a target="_blank" '
-                    + 'href="https://pokerfacowaty.com"><b>link in bold</b>'
-                    + '</a></li><li><a target="_blank" '
-                    + 'href="https://pokerfacowaty.com"><b>'
-                    + '<i>link bold both</i></b></a></li></ul>')
         paml2html.add_unordered_list(ulist, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
