@@ -538,44 +538,60 @@ class TestPaml(unittest.TestCase):
 
     # Mixed lists
 
-    def test_mixed_list_starting_unordered(self):
+    def test_mixed_list_one_level_starting_unordered(self):
         mlist = ['- Element 1\n',
-                 '- Element 2\n',
                  '    1. Subelement 1\n',
-                 '    2. Subelement 2\n',
-                 '        - Subsubelement\n',
-                 '    3. Subelement 3\n',
-                 '- Element 3\n',
-                 '']
+                 '- Element 2\n', '']
         expected = ('<ul><li>Element 1</li>'
-                    + '<li>Element 2</li>'
-                    + '<ol><li>Subelement 1</li>'
-                    + '<li>Subelement 2</li>'
-                    + '<ul><li>Subsubelement</li></ul>'
-                    + '<li>Subelement 3</li></ol>'
-                    + '<li>Element 3</li></ul>')
+                    + '<ol><li>Subelement 1</li></ol>'
+                    + '<li>Element 2</li></ul>')
         paml2html.add_unordered_list(mlist, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
         self.assertEqual(result, expected)
 
-    def test_mixed_list_starting_ordered(self):
+    def test_mixed_list_two_levels_starting_unordered(self):
+        mlist = ['- Element 1\n',
+                 '    1. Subelement 1\n',
+                 '        - Subsubelement\n',
+                 '    2. Subelement 2\n',
+                 '- Element 2\n', '']
+        expected = ('<ul><li>Element 1</li>'
+                    + '<ol><li>Subelement 1</li>'
+                    + '<ul><li>Subsubelement</li></ul>'
+                    + '<li>Subelement 2</li></ol>'
+                    + '<li>Element 2</li></ul>')
+        paml2html.add_unordered_list(mlist, 0)
+        result = paml2html.doc.getvalue()
+        (paml2html.doc, paml2html.tag,
+         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
+        self.assertEqual(result, expected)
+
+    def test_mixed_list_one_level_starting_ordered(self):
         mlist = ['1. Element 1\n',
-                 '2. Element 2\n',
                  '    - Subelement 1\n',
-                 '    - Subelement 2\n',
-                 '        1. Subsubelement\n',
-                 '    - Subelement 3\n',
-                 '3. Element 3\n',
-                 '']
+                 '2. Element 2\n', '']
         expected = ('<ol><li>Element 1</li>'
-                    + '<li>Element 2</li>'
+                    + '<ul><li>Subelement 1</li></ul>'
+                    + '<li>Element 2</li></ol>')
+        paml2html.add_ordered_list(mlist, 0)
+        result = paml2html.doc.getvalue()
+        (paml2html.doc, paml2html.tag,
+         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
+        self.assertEqual(result, expected)
+
+    def test_mixed_list_two_levels_starting_ordered(self):
+        mlist = ['1. Element 1\n',
+                 '    - Subelement 1\n',
+                 '        1. Subsubelement\n',
+                 '    - Subelement 2\n',
+                 '2. Element 2\n', '']
+        expected = ('<ol><li>Element 1</li>'
                     + '<ul><li>Subelement 1</li>'
-                    + '<li>Subelement 2</li>'
                     + '<ol><li>Subsubelement</li></ol>'
-                    + '<li>Subelement 3</li>'
-                    + '</ul><li>Element 3</li></ol>')
+                    + '<li>Subelement 2</li></ul>'
+                    + '<li>Element 2</li></ol>')
         paml2html.add_ordered_list(mlist, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
