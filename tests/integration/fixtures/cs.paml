@@ -1,0 +1,263 @@
+>l➤ shell
+    /Ctrl + A /* Line beginning */
+    /Ctrl + E /* EOTL */
+    /Ctrl + L /* Clear the screen */
+    /Ctrl + U /* Clear the line before cursor */
+    /Ctrl + K /* Clear the line after cursor */
+    /Ctrl + R /* Search last commands */
+    /Alt + F /* Cursor one word forward */
+    /Alt + B /* Cursor one word backward */
+    ```/* Create an alias */ /** Save to .bashrc to make permanent **/
+    alias {short}="{full}"
+    ```
+>l➤ irssi
+    /Alt + N /* Switch window to N */ /** Works until Alt + O **/
+    /PgUp/PgDwn /*  Scroll */
+    ```/* Auto connect */
+    server add -ssl -auto -network {network} {link} {port}
+    ```
+    ```/* Auto identify */
+    /network add -autosendcmd "/msg nickserv identify {password} ;wait 2000" {network}
+    ```
+    ```/* Auto join channels */
+    /channel add -auto {channel} {network}
+    ```
+    ```/* Save all settings */
+    /save
+    ```
+>l➤ grep
+    /-i /* Ignore case */
+    /-r /* Dir and all subdirs */
+    /| /* OR operator */
+    ```/* Searching for a string in a file */
+    grep {options} {string} {path}
+    ```
+>l➤ ffmpeg
+    ```/* Hi8 for DaVinci */ /** H.264 at 1920x1440 capped at 10 Mb/s **/
+    ffmpeg -i {input} -filter:v yadif=0:1:0 -c:v libx264 -crf 18 -c:a aac -b 320k {output}
+    ```
+    ```/* Hi8 skipping DaVinci */
+    ffmpeg -i {input} -filter:v yadif=0:1:0 -c:v libx264 -crf 22 -s 1920x1440 -c:a aac -b 320k {output}
+    ```
+    ```/* Mapping */
+    -map {input number}:{v/a/s}:{stream number}
+    ```
+    ```/* [Video to GIF (256 colors per frame)](https://engineering.giphy.com/how-to-make-gifs-with-ffmpeg/)
+    -1 for height in scale means "keep aspect ratio"
+    ```
+    ```/* Video to GIF (256 colors per video) */
+    ffmpeg -i {input} -filter_complex "[0:v] fps={fps},scale={width}:-1,split [a][b];[a] palettegen [p];[b][p] paletteuse" {output}
+    ```
+    ```/* Changing FPS (same duration) */
+    ffmpeg -i {input} -filter:v fps={fps} {output}
+    ```
+    ```/* Muting a part of a video */
+    ffmpeg -i {input} -c:v copy -af "volume=enable='between(t,{start},{end})':volume=0, volume=enable='between(t,{start},{end})':volume=0 {output}"
+    ```
+>l➤ Sheets
+    ```/* Highlighting rows with checkboxes */
+    =$A2:$A=TRUE
+    ```
+>l➤ Docker
+    /Ctrl+P Ctrl+Q /*  Exiting a container's shell but keeping it running */
+    ```/* [Listing containter volumes](https://stackoverflow.com/questions/30133664/how-do-you-list-volumes-in-docker-containers/30133768#30133768) */
+    docker inspect -f '{{ .Mounts }}' containerid
+    ```
+    ```/* Connecting a container to a network */
+    docker network connect {network} {container-name}
+    ```
+    ```/* Listing all containers and their IPs */
+    docker ps -q | xargs -n 1 docker inspect --format '{{ .Name }} {{range .NetworkSettings.Networks}} {{.IPAddress}}{{end}}' | sed 's#^/##';
+    ```
+    ```/* SSH into a container */
+    docker run -it {container-name} /bin/bash
+    ```
+>r➤ tmux
+    >r General
+        /Ctrl + B : /* Command Mode */
+        /Ctrl + B [ /* Copy (scroll) mode */
+        ```/* Show every session, window, pane etc */
+        tmux info
+        ```
+    >r Sessions
+        /Ctrl + B D /* Detach */
+        /Ctrl + B $ /* Rename current session */
+        ```/* New session */
+        tmux new -s {name}
+        ```
+        ```/* Kill session */
+        tmux kill-ses -t {name}
+        ```
+        ```/* List sessions */
+        tmux ls
+        ```
+        ```/* Attach to last session */
+        tmux a
+        ```
+        ```/* Attach to {name} */
+        tmux a -t {name}
+        ```
+    >r Windows
+        /Ctrl + B C /* Create window */
+        /Ctrl + B , /* Rename current window */
+        /Ctrl + B & /* Close current window */
+        /Ctrl + B P /* [P]revious window */
+        /Ctrl + B N /* [N]ext window */
+        /Ctrl + B 0-9 /* Select window */
+    >r Panes
+        /Ctrl + B % /* Split pane into columns */
+        /Ctrl + B " /* Split pane into rows */
+        /Ctrl + B ← → ↑ ↓ /* Switch panes */
+        /Ctrl + B Q /* Show pane numbers */
+        /Ctrl + B Q 0-9 /* Select pane */
+        /Ctrl + B Z /* Toggle pane zoom */
+        /Ctrl + B ! /* Convert pane into a window */
+        /Ctrl + B X /* Close current pane */
+        ```/* Resizing panes */ /** [U]p, [D]own, [L]eft, [R]ight **/
+        :resize-pane -{U, D, L, R} {number of cells}
+        ```
+>r➤ nano
+    <
+    <div class="tab-comment">Set "Use Option as Meta key" on Mac</div>
+    >
+    /Ctrl + S /* Save */
+    /Ctrl + O /* Save as */
+    /Ctrl + X /* Close */
+    /Alt + A /* Turn the mark on/off */
+    /Alt + 6 /* Copy current line / mark */
+    /Ctrl + K /* Cut current line / mark */
+    /Ctrl + U /* Paste buffer content */
+    /Alt + U /* Undo */
+    /Alt + E /* Redo */
+>r➤ cron
+    ```/* Display the crontab file */
+    crontab -l
+    ```
+    ```/* Edit the crontab file */
+    crontab -e
+    ```
+    ```/* Syntax */ /** For dow Sunday is 0 **/
+    {m} {h} {dom} {mon} {dow} {command}
+    ```
+    ```/* Every minute of every day */
+    * * * * * * {command}
+    ```
+    ```/* Every 10 minutes of every day */
+    */10 * * * * * {command}
+    ```
+    ```/* Special strings */
+    @reboot @yearly @monthly @weekly @daily @hourly
+    ```
+>r➤ git
+    ```/* Add all files to the repo */ /** Usually for when commit returns an error xd **/
+    git add .
+    ```
+    ```
+    git commit -m {message}
+    ```
+    ```/* Switch branch */
+    git switch {new-branch}
+    ```
+    ```/* [Create a new local branch](https://stackoverflow.com/questions/25053697/git-merge-two-local-branches/30359061#30359061) */ /** Since git 2.23 (Q3 2019) **/
+    git switch -c {new-branch} {old-branch}
+    ```
+    ```/* Merging branches */ /** While on branch A and willing to merge B INTO A **/
+    git merge {B}
+    ```
+    ```/* Delete a branch locally */ /** Only if it's been pushed/merged, -D to force **/
+    git branch -d {branch}
+    ```
+    ```/* Delete a branch remotely */
+    git push origin --delete {branch}
+    ```
+>r➤ VSCode
+    <
+    <div class="tab-comment">For Mac: Ctrl = Command & Alt = Option, obviously</div>
+    >
+    /Ctrl + / /* Single line comment */
+    /Shift + Alt + A /* Multi line comment */
+    /Ctrl + \ /* Split editor view */
+    /Ctrl + Shift + L /* Add cursor to all matching selections */
+>r➤ Markdown
+    <
+    <div class="tab-comment">Tables in PaML don't support multi-line inputs as of now, so this is done with HTML</div>
+    >
+    <
+                <table>
+                <tr>
+                    <td>Heading</td>
+                    <td># H1 <br>## H2 <br>### H3</td>
+                </tr>
+                <tr>
+                    <td>Bold</td>
+                    <td>**bold text**</td>
+                </tr>
+                <tr>
+                    <td>Italic</td>
+                    <td>*italicized text*</td>
+                </tr>
+                <tr>
+                    <td>Blockquote</td>
+                    <td>> blockquote</td>
+                </tr>
+                <tr>
+                    <td>Ordered List</td>
+                    <td>1. First item<br>
+                        2. Second item<br>
+                        3. Third item</td>
+                </tr>
+                <tr>
+                    <td>Unordered List</td>
+                    <td>- First item<br>
+                        - Second item<br>
+                        - Third item</td>
+                </tr>
+                <tr>
+                    <td>Code</td>
+                    <td>`code`</td>
+                </tr>
+                <tr>
+                    <td>Horizontal Rule</td>
+                    <td>---</td>
+                </tr>
+                <tr>
+                    <td>Link</td>
+                    <td>[title](https://www.example.com)</td>
+                </tr>
+                <tr>
+                    <td>Image</td>
+                    <td>![alt text](image.jpg)</td>
+                </tr>
+                <tr>
+                    <td>Table</td>
+                    <td>| Syntax | Description |<br>
+                        | ----------- | ----------- |<br>
+                        | Header | Title |<br>
+                        | Paragraph | Text |</td>
+                </tr>
+                <tr>
+                    <td>Code Line</td>
+                    <td>```</td>
+                </tr>
+                <tr>
+                    <td>Fenced Code Block</td>
+                    <td>```<br>
+                        {<br>
+                          "firstName": "John",<br>
+                          "lastName": "Smith",<br>
+                          "age": 25<br>
+                        }<br>
+                        ```</td>
+                </tr>
+                <tr>
+                    <td>Strikethrough</td>
+                    <td>~~The world is flat.~~</td>
+                </tr>
+                <tr>
+                    <td>Task List</td>
+                    <td>- [x] Write the press release<br>
+                        - [ ] Update the website<br>
+                        - [ ] Contact the media</td>
+                </tr>
+            </table>
+    >
