@@ -687,18 +687,38 @@ class TestPaml(unittest.TestCase):
 
     # Raw HTML
 
-    # Text formatting
+    # Simple text formatting
+    # NOTE: more extensive testing on formatting is done in a separate file
 
-    def test_text_formatting(self):
-        text = ('**This is bold __and now also italics** but not bold '
-                + 'anymore__, ``while **this** __is__ all <code>`` and __this '
-                + 'is a [link in italics](https://pokerfacowaty.com)__')
-        expected = ('<b>This is bold <i>and now also italics</b> but not bold'
-                    + ' anymore</i>, <span class="inline-code">while **this** '
-                    + '__is__ all &lt;code&gt;</span> and <i>this is a <a '
-                    + 'target="_blank" href="https://pokerfacowaty.com">link '
-                    + 'in italics</a></i>')
-        result = paml2html.format_txt(text)
+    def test_inline_code(self):
+        code = '``Inline code``'
+        expected = ('<span class="inline-code">Inline code</span>')
+        result = paml2html.add_inline_code(code)
+        (paml2html.doc, paml2html.tag,
+         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
+        self.assertEqual(result, expected)
+
+    def test_link(self):
+        link = '[link](https://pokerfacowaty.com)'
+        expected = ('<a target="_blank" href="https://pokerfacowaty.com">link'
+                    + '</a>')
+        result = paml2html.add_link(link)
+        (paml2html.doc, paml2html.tag,
+         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
+        self.assertEqual(result, expected)
+
+    def test_bold(self):
+        bold = '**Bold**'
+        expected = '<b>Bold</b>'
+        result = paml2html.decorate_txt(bold)
+        (paml2html.doc, paml2html.tag,
+         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
+        self.assertEqual(result, expected)
+
+    def test_italics(self):
+        it = '__Italics__'
+        expected = '<i>Italics</i>'
+        result = paml2html.decorate_txt(it)
         (paml2html.doc, paml2html.tag,
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
         self.assertEqual(result, expected)
