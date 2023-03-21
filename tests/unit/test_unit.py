@@ -536,6 +536,36 @@ class TestPaml(unittest.TestCase):
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
         self.assertEqual(result, expected)
 
+    def test_ordered_list_nested(self):
+        olist = ['1. Element 1\n',
+                 '    1. Subelement\n',
+                 '2. Element 2\n', '']
+        expected = ('<ol><li>Element 1</li>'
+                    + '<ol><li>Subelement</li></ol>'
+                    + '<li>Element 2</li></ol>')
+        paml2html.add_ordered_list(olist, 0)
+        result = paml2html.doc.getvalue()
+        (paml2html.doc, paml2html.tag,
+         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
+        self.assertEqual(result, expected)
+
+    def test_ordered_list_nested_two_levels(self):
+        olist = ['1. Element 1\n',
+                 '    1. Subelement 1\n',
+                 '        1. Subsubelement\n',
+                 '    2. Subelement 2\n',
+                 '2. Element 2\n', '']
+        expected = ('<ol><li>Element 1</li>'
+                    + '<ol><li>Subelement 1</li>'
+                    + '<ol><li>Subsubelement</li></ol>'
+                    + '<li>Subelement 2</li></ol>'
+                    + '<li>Element 2</li></ol>')
+        paml2html.add_ordered_list(olist, 0)
+        result = paml2html.doc.getvalue()
+        (paml2html.doc, paml2html.tag,
+         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
+        self.assertEqual(result, expected)
+
     # Mixed lists
 
     def test_mixed_list_one_level_starting_unordered(self):
