@@ -379,6 +379,24 @@ class TestPaml(unittest.TestCase):
 
     # Paragraphs
 
+    def test_empty_paragraph(self):
+        para = ['{\n', '}\n', '']
+        expected = '<div class="paragraph"><p></p></div>'
+        paml2html.add_paragraph(para, 0)
+        result = paml2html.doc.getvalue()
+        (paml2html.doc, paml2html.tag,
+         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
+        self.assertEqual(result, expected)
+
+    def test_empty_one_line_paragraph(self):
+        para = ['{\n', '\n', '}\n', '']
+        expected = '<div class="paragraph"><p></p></div>'
+        paml2html.add_paragraph(para, 0)
+        result = paml2html.doc.getvalue()
+        (paml2html.doc, paml2html.tag,
+         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
+        self.assertEqual(result, expected)
+
     def test_single_line_paragraph(self):
         para = ['{\n',
                 'Simple paragraph\n',
@@ -440,7 +458,7 @@ class TestPaml(unittest.TestCase):
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
         self.assertEqual(result, expected)
 
-    def test_paragraph_with_left_picture(self):
+    def test_single_line_paragraph_with_left_picture(self):
         para = ['{!l[alt text](image.png)\n',
                 'some text\n',
                 '}\n',
@@ -454,7 +472,7 @@ class TestPaml(unittest.TestCase):
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
         self.assertEqual(result, expected)
 
-    def test_paragraph_with_right_picture(self):
+    def test_single_line_paragraph_with_right_picture(self):
         para = ['{!r[alt text](image.png)\n',
                 'some text\n',
                 '}\n',
