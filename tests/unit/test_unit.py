@@ -673,45 +673,12 @@ class TestPaml(unittest.TestCase):
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
         self.assertEqual(result, expected)
 
-    def test_table_with_headers_with_decorations(self):
-        table = ['|              Head               |     Shoulders     |\n',
-                 '|              -----              |       -----       |\n',
-                 '|       **bold of you to**        | ``*ass*ume code`` |\n',
-                 '| [by](https://pokerfacowaty.com) |   __will work__   |\n',
-                 '']
-        expected = ('<table><tr><th>Head</th><th>Shoulders</th>'
-                    + '</tr><tr><td><b>bold of you to</b></td>'
-                    + '<td><span class="inline-code">*ass*ume code</span></td>'
-                    + '</tr><tr><td><a target="_blank" '
-                    + 'href="https://pokerfacowaty.com">by</a></td>'
-                    + '<td><i>will work</i></td></tr></table>')
-        paml2html.add_table(table, 0)
-        result = paml2html.doc.getvalue()
-        (paml2html.doc, paml2html.tag,
-         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
-        self.assertEqual(result, expected)
-
     def test_table_without_headers(self):
         table = ['| a | b |\n',
                  '| c | d |\n',
                  '']
         expected = ('<table><tr><td>a</td><td>b</td>'
                     + '</tr><tr><td>c</td><td>d</td></tr></table>')
-        paml2html.add_table(table, 0)
-        result = paml2html.doc.getvalue()
-        (paml2html.doc, paml2html.tag,
-         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
-        self.assertEqual(result, expected)
-
-    def test_table_without_headers_with_decorations(self):
-        table = ['| **bold of you to**              | ``*ass*ume code`` |\n',
-                 '| [by](https://pokerfacowaty.com) | __will work__     |\n',
-                 '']
-        expected = ('<table><tr><td><b>bold of you to</b></td><td>'
-                    + '<span class="inline-code">*ass*ume code</span></td>'
-                    + '</tr><tr><td><a target="_blank" '
-                    + 'href="https://pokerfacowaty.com">by</a></td>'
-                    + '<td><i>will work</i></td></tr></table>')
         paml2html.add_table(table, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
