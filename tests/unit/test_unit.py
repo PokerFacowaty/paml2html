@@ -17,8 +17,7 @@ import unittest
    You might find it strange to see paml in a list such as header1 instead of
    a string, but functions expecting the paml_lines variable expect paml in a
    list of strings ending in \n with an additional empty line at the end either
-   already there or added by convert_from_file or convert_from_text.
-   '''
+   already there or added by convert_from_file or convert_from_text.'''
 
 
 class TestPaml(unittest.TestCase):
@@ -82,45 +81,112 @@ class TestPaml(unittest.TestCase):
     # Collapsibles
 
     def test_l_collapsible_box(self):
-        coll = ['>l➤ irssi\n', '    ![alt text](./image.png)\n', '    ```/* Auto connect */ /** Connects, small comment **/\n', '    server add -ssl -auto -network {network} {link} {port}\n', '    ```\n', '    {![alt text](image.png)\n', '        some text\n', '    }\n', '']
-        expected = '''<div class="collapsible-box-half-left"><details><summary class="header"><span class="icon">➤</span> irssi</summary><div class="entry"><img alt="alt text" src="./image.png" /></div><div class="entry"><div class="line-code-box"><div class="line-code-comment">Auto connect</div><div class="line-code-small-comment">Connects, small comment</div><code class="line-code">server add -ssl -auto -network {network} {link} {port}
-</code></div></div><div class="entry"><div class="paragraph"><img alt="alt text" src="image.png" /><p>some text</p></div></div></details></div>'''
+        coll = ['>l➤ irssi\n',
+                '    ![alt text](./image.png)\n',
+                '    ```/* Comment */ /** Small comment **/\n',
+                '    server add -ssl -auto -network {network} {link} {port}\n',
+                '    ```\n',
+                '    {![alt text](image.png)\n',
+                '        some text\n',
+                '    }\n',
+                '']
+        exp = ('<div class="collapsible-box-half-left"><details>'
+               + '<summary class="header"><span class="icon">➤</span> irssi'
+               + '</summary>'
+
+               + '<div class="entry"><img alt="alt text" src="./image.png" />'
+               + '</div>'
+
+               + '<div class="entry"><div class="line-code-box">'
+               + '<div class="line-code-comment">Comment</div>'
+               + '<div class="line-code-small-comment">Small comment</div>'
+               + '<code class="line-code">server add -ssl -auto -network '
+               + '{network} {link} {port}\n'
+               + '</code></div></div>'
+
+               + '<div class="entry"><div class="paragraph">'
+               + '<img alt="alt text" src="image.png" />'
+               + '<p>some text</p></div></div></details></div>')
         paml2html.add_collapsible_box(coll, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
-        self.assertEqual(result, expected)
+        self.assertEqual(result, exp)
 
     def test_r_collapsible_box_without_icon(self):
-        coll = ['>r irssi\n', '    ```/* break vs continue *//**Small block code comment **/\n', 'for x in "abcd":\n', '    if x == "c":\n', '        break\n', '    print(x)  # a, b\n', '    ```\n', '    /Ctrl + E /* Clear the screen */ /** Small comment **/\n', '']
-        expected = '''<div class="collapsible-box-half-right"><details><summary class="header">irssi</summary><div class="entry"><div class="block-code-box"><div class="block-code-comment">break vs continue</div><div class="block-code-small-comment">Small block code comment</div><code class="block-code"><pre>for x in "abcd":
-    if x == "c":
-        break
-    print(x)  # a, b
-</pre></code></div></div><div class="entry"><div class="command-box"><span class="command">Ctrl + E</span><span class="same-line-comment">Clear the screen</span><div class="small-comment">Small comment</div></div></div></details></div>'''
+        coll = ['>r irssi\n',
+                '    ```/* Comment *//**Small comment **/\n',
+                'for x in "abcd":\n',
+                '    if x == "c":\n',
+                '        break\n',
+                '    print(x)  # a, b\n',
+                '    ```\n',
+                '    /Ctrl + E /* Comment */ /** Small comment **/\n',
+                '']
+        exp = ('<div class="collapsible-box-half-right"><details>'
+               + '<summary class="header">irssi</summary>'
+
+               + '<div class="entry"><div class="block-code-box">'
+               + '<div class="block-code-comment">Comment</div>'
+               + '<div class="block-code-small-comment">Small comment</div>'
+               + '<code class="block-code"><pre>for x in "abcd":\n'
+               + '    if x == "c":\n'
+               + '        break\n'
+               + '    print(x)  # a, b\n'
+               + '</pre></code></div></div>'
+
+               + '<div class="entry"><div class="command-box">'
+               + '<span class="command">Ctrl + E</span>'
+               + '<span class="same-line-comment">Comment</span>'
+               + '<div class="small-comment">Small comment</div></div></div>'
+               + '</details></div>')
         paml2html.add_collapsible_box(coll, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
-        self.assertEqual(result, expected)
+        self.assertEqual(result, exp)
 
     def test_nested_collapsible(self):
-        coll = ['>l➤ collapsible\n', '    >l➤ nested collapsible\n', '        /Ctrl + E /* Clear the screen */ /** Small comment **/\n', '        >l➤ second nested collapsible\n', '    >l nested collapsible\n', '']
-        expected = '<div class="collapsible-box-half-left"><details><summary class="header"><span class="icon">➤</span> collapsible</summary><details><summary class="header"><span class="icon">➤</span> nested collapsible</summary><div class="entry"><div class="command-box"><span class="command">Ctrl + E</span><span class="same-line-comment">Clear the screen</span><div class="small-comment">Small comment</div></div></div><details><summary class="header"><span class="icon">➤</span> second nested collapsible</summary></details></details><details><summary class="header">nested collapsible</summary></details></details></div>'
+        coll = ['>l➤ collapsible\n',
+                '    >l➤ nested collapsible\n',
+                '        /Ctrl + E /* Comment */ /** Small comment **/\n',
+                '        >l➤ second nested collapsible\n',
+                '    >l nested collapsible\n',
+                '']
+        exp = ('<div class="collapsible-box-half-left"><details><summary class'
+               + '="header"><span class="icon">➤</span> collapsible</summary>'
+
+               + '<details><summary class="header"><span class="icon">➤'
+               + '</span> nested collapsible</summary>'
+
+               + '<div class="entry"><div class="command-box">'
+               + '<span class="command">Ctrl + E</span>'
+               + '<span class="same-line-comment">Comment</span>'
+               + '<div class="small-comment">Small comment</div></div></div>'
+
+               + '<details><summary class="header"><span class="icon">➤</span>'
+               + ' second nested collapsible</summary></details></details>'
+
+               + '<details><summary class="header">nested collapsible'
+               + '</summary></details></details></div>')
         paml2html.add_collapsible_box(coll, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
-        self.assertEqual(result, expected)
+        self.assertEqual(result, exp)
 
     # Code block
 
     def test_code_block_no_comments(self):
-        block = ["```\n", "This is a code block\n", "with no comment.\n",
-                 "```\n", ""]
-        expected = '''<div class="block-code-box"><code class="block-code"><pre>This is a code block
-with no comment.
-</pre></code></div>'''
+        block = ["```\n",
+                 "This is a code block\n",
+                 "with no comment.\n",
+                 "```\n",
+                 ""]
+        expected = ('<div class="block-code-box"><code class="block-code">'
+                    + '<pre>This is a code block\n'
+                    + 'with no comment.\n'
+                    + '</pre></code></div>')
         paml2html.add_code_block(block, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
@@ -128,11 +194,16 @@ with no comment.
         self.assertEqual(result, expected)
 
     def test_code_block_comment(self):
-        block = ['```/* Comment */\n', 'This is a code block\n',
-                 'with a comment.\n', '```\n', '']
-        expected = '''<div class="block-code-box"><div class="block-code-comment">Comment</div><code class="block-code"><pre>This is a code block
-with a comment.
-</pre></code></div>'''
+        block = ['```/* Comment */\n',
+                 'This is a code block\n',
+                 'with a comment.\n',
+                 '```\n',
+                 '']
+        expected = ('<div class="block-code-box">'
+                    + '<div class="block-code-comment">Comment</div>'
+                    + '<code class="block-code"><pre>This is a code block\n'
+                    + 'with a comment.\n'
+                    + '</pre></code></div>')
         paml2html.add_code_block(block, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
@@ -140,11 +211,17 @@ with a comment.
         self.assertEqual(result, expected)
 
     def test_code_block_small_comment_only(self):
-        block = ['```/** Small comment **/\n', 'This is a code block\n',
-                 'with a comment.\n', '```\n', '']
-        expected = '''<div class="block-code-box"><div class="block-code-small-comment">Small comment</div><code class="block-code"><pre>This is a code block
-with a comment.
-</pre></code></div>'''
+        block = ['```/** Small comment **/\n',
+                 'This is a code block\n',
+                 'with a comment.\n',
+                 '```\n',
+                 '']
+        expected = ('<div class="block-code-box">'
+                    + '<div class="block-code-small-comment">Small comment'
+                    + '</div><code class="block-code">'
+                    + '<pre>This is a code block\n'
+                    + 'with a comment.\n'
+                    + '</pre></code></div>')
         paml2html.add_code_block(block, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
@@ -152,11 +229,17 @@ with a comment.
         self.assertEqual(result, expected)
 
     def test_code_block_both_comments(self):
-        block = ['```/** Small comment **/\n', 'This is a code block\n',
-                 'with a comment.\n', '```\n', '']
-        expected = '''<div class="block-code-box"><div class="block-code-small-comment">Small comment</div><code class="block-code"><pre>This is a code block
-with a comment.
-</pre></code></div>'''
+        block = ['```/** Small comment **/\n',
+                 'This is a code block\n',
+                 'with a comment.\n',
+                 '```\n',
+                 '']
+        expected = ('<div class="block-code-box">'
+                    + '<div class="block-code-small-comment">'
+                    + 'Small comment</div><code class="block-code">'
+                    + '<pre>This is a code block\n'
+                    + 'with a comment.\n'
+                    + '</pre></code></div>')
         paml2html.add_code_block(block, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
@@ -166,7 +249,8 @@ with a comment.
     # Images
 
     def test_image(self):
-        image = ['![alt text](image.png)\n', '']
+        image = ['![alt text](image.png)\n',
+                 '']
         expected = '<img alt="alt text" src="image.png" />'
         paml2html.add_image(image, 0)
         result = paml2html.doc.getvalue()
@@ -177,7 +261,10 @@ with a comment.
     # Paragraphs
 
     def test_single_line_paragraph(self):
-        para = ['{\n', 'Simple paragraph\n', '}\n', '']
+        para = ['{\n',
+                'Simple paragraph\n',
+                '}\n',
+                '']
         expected = '<div class="paragraph"><p>Simple paragraph</p></div>'
         paml2html.add_paragraph(para, 0)
         result = paml2html.doc.getvalue()
@@ -189,8 +276,12 @@ with a comment.
         # The output should look exactly the same, as the indentation is only
         # for visual purposes
 
-        para = ['{\n', '    Paragraph with 4 spaces\n', '}\n', '']
-        expected = '<div class="paragraph"><p>Paragraph with 4 spaces</p></div>'
+        para = ['{\n',
+                '    Paragraph with 4 spaces\n',
+                '}\n',
+                '']
+        expected = ('<div class="paragraph">'
+                    + '<p>Paragraph with 4 spaces</p></div>')
         paml2html.add_paragraph(para, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
@@ -198,9 +289,14 @@ with a comment.
         self.assertEqual(result, expected)
 
     def test_multi_line_paragraph(self):
-        para = ['{\n', 'Paragraph with no indentation\n', '\n',
-                'Second paragraph\n', '}\n', '']
-        expected = '<div class="paragraph"><p>Paragraph with no indentation<br><br>Second paragraph</p></div>'
+        para = ['{\n',
+                'Paragraph with no indentation\n',
+                '\n',
+                'Second paragraph\n',
+                '}\n',
+                '']
+        expected = ('<div class="paragraph"><p>Paragraph with no indentation'
+                    + '<br><br>Second paragraph</p></div>')
         paml2html.add_paragraph(para, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
@@ -211,9 +307,14 @@ with a comment.
         # The output should look exactly the same, as the indentation is only
         # for visual purposes
 
-        para = ['{\n', '    Paragraph with 4 spaces\n', '\n',
-                '    Second paragraph with 4 spaces\n', '}\n', '']
-        expected = '<div class="paragraph"><p>Paragraph with 4 spaces<br><br>Second paragraph with 4 spaces</p></div>'
+        para = ['{\n',
+                '    Paragraph with 4 spaces\n',
+                '\n',
+                '    Second paragraph with 4 spaces\n',
+                '}\n',
+                '']
+        expected = ('<div class="paragraph"><p>Paragraph with 4 spaces'
+                    + '<br><br>Second paragraph with 4 spaces</p></div>')
         paml2html.add_paragraph(para, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
@@ -221,8 +322,13 @@ with a comment.
         self.assertEqual(result, expected)
 
     def test_paragraph_with_left_picture(self):
-        para = ['{!l[alt text](image.png)\n', 'some text\n', '}\n', '']
-        expected = '<div class="paragraph"><img alt="alt text" src="image.png" class="img-half-left" /><p>some text</p></div>'
+        para = ['{!l[alt text](image.png)\n',
+                'some text\n',
+                '}\n',
+                '']
+        expected = ('<div class="paragraph"><img alt="alt text" '
+                    + 'src="image.png" class="img-half-left" />'
+                    + '<p>some text</p></div>')
         paml2html.add_paragraph(para, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
@@ -230,8 +336,13 @@ with a comment.
         self.assertEqual(result, expected)
 
     def test_paragraph_with_right_picture(self):
-        para = ['{!r[alt text](image.png)\n', 'some text\n', '}\n', '']
-        expected = '<div class="paragraph"><img alt="alt text" src="image.png" class="img-half-right" /><p>some text</p></div>'
+        para = ['{!r[alt text](image.png)\n',
+                'some text\n',
+                '}\n',
+                '']
+        expected = ('<div class="paragraph"><img alt="alt text" '
+                    + 'src="image.png" class="img-half-right" />'
+                    + '<p>some text</p></div>')
         paml2html.add_paragraph(para, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
@@ -241,8 +352,13 @@ with a comment.
     # Unordered lists + content
 
     def test_unordered_list(self):
-        ulist = ['- Element 1\n', '- Element 2\n', '- Element 3\n', '']
-        expected = '<ul><li>Element 1</li><li>Element 2</li><li>Element 3</li></ul>'
+        ulist = ['- Element 1\n',
+                 '- Element 2\n',
+                 '- Element 3\n',
+                 '']
+        expected = ('<ul><li>Element 1</li>'
+                    + '<li>Element 2</li>'
+                    + '<li>Element 3</li></ul>')
         paml2html.add_unordered_list(ulist, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
@@ -253,8 +369,13 @@ with a comment.
         ulist = ['- **Bold element**\n',
                  '- __Italic element__\n',
                  '- ``Inline code``\n',
-                 '- [link](https://pokerfacowaty.com)\n', '']
-        expected = '<ul><li><b>Bold element</b></li><li><i>Italic element</i></li><li><span class="inline-code">Inline code</span></li><li><a target="_blank" href="https://pokerfacowaty.com">link</a></li></ul>'
+                 '- [link](https://pokerfacowaty.com)\n',
+                 '']
+        expected = ('<ul><li><b>Bold element</b></li>'
+                    + '<li><i>Italic element</i></li>'
+                    + '<li><span class="inline-code">Inline code</span></li>'
+                    + '<li><a target="_blank" '
+                    + 'href="https://pokerfacowaty.com">link</a></li></ul>')
         paml2html.add_unordered_list(ulist, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
@@ -266,8 +387,16 @@ with a comment.
                  '- **__Kinda same but not really**__\n',
                  '- ``Code __ignoring__ **special** chars``\n',
                  '- [**link in bold**](https://pokerfacowaty.com)\n',
-                 '- [**__link bold both__**](https://pokerfacowaty.com)\n', '']
-        expected = '<ul><li><b><i>Text in bold and italics</i></b></li><li><b><i>Kinda same but not really</b></i></li><li><span class="inline-code">Code __ignoring__ **special** chars</span></li><li><a target="_blank" href="https://pokerfacowaty.com"><b>link in bold</b></a></li><li><a target="_blank" href="https://pokerfacowaty.com"><b><i>link bold both</i></b></a></li></ul>'
+                 '- [**__link bold both__**](https://pokerfacowaty.com)\n',
+                 '']
+        expected = ('<ul><li><b><i>Text in bold and italics</i></b></li>'
+                    + '<li><b><i>Kinda same but not really</b></i></li>'
+                    + '<li><span class="inline-code">Code __ignoring__ '
+                    + '**special** chars</span></li><li><a target="_blank" '
+                    + 'href="https://pokerfacowaty.com"><b>link in bold</b>'
+                    + '</a></li><li><a target="_blank" '
+                    + 'href="https://pokerfacowaty.com"><b>'
+                    + '<i>link bold both</i></b></a></li></ul>')
         paml2html.add_unordered_list(ulist, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
@@ -277,8 +406,13 @@ with a comment.
     # Ordered lists + content
 
     def test_ordered_list(self):
-        olist = ['1. Element\n', '2. Element\n', '3. Element\n', '']
-        expected = '<ol><li>Element</li><li>Element</li><li>Element</li></ol>'
+        olist = ['1. Element\n',
+                 '2. Element\n',
+                 '3. Element\n',
+                 '']
+        expected = ('<ol><li>Element</li>'
+                    + '<li>Element</li>'
+                    + '<li>Element</li></ol>')
         paml2html.add_ordered_list(olist, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
@@ -289,8 +423,13 @@ with a comment.
         olist = ['1. **Bold element**\n',
                  '2. __Italic element__\n',
                  '3. ``Inline code``\n',
-                 '4. [link](https://pokerfacowaty.com)\n', '']
-        expected = '<ol><li><b>Bold element</b></li><li><i>Italic element</i></li><li><span class="inline-code">Inline code</span></li><li><a target="_blank" href="https://pokerfacowaty.com">link</a></li></ol>'
+                 '4. [link](https://pokerfacowaty.com)\n',
+                 '']
+        expected = ('<ol><li><b>Bold element</b></li>'
+                    + '<li><i>Italic element</i></li>'
+                    + '<li><span class="inline-code">Inline code</span></li>'
+                    + '<li><a target="_blank" '
+                    + 'href="https://pokerfacowaty.com">link</a></li></ol>')
         paml2html.add_ordered_list(olist, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
@@ -302,8 +441,16 @@ with a comment.
                  '2. **__Kinda same but not really**__\n',
                  '3. ``Code __ignoring__ **special** chars``\n',
                  '4. [**link in bold**](https://pokerfacowaty.com)\n',
-                 '5. [**__link bold both__**](https://pokerfacowaty.com)\n', '']
-        expected = '<ol><li><b><i>Text in bold and italics</i></b></li><li><b><i>Kinda same but not really</b></i></li><li><span class="inline-code">Code __ignoring__ **special** chars</span></li><li><a target="_blank" href="https://pokerfacowaty.com"><b>link in bold</b></a></li><li><a target="_blank" href="https://pokerfacowaty.com"><b><i>link bold both</i></b></a></li></ol>'
+                 '5. [**__link bold both__**](https://pokerfacowaty.com)\n',
+                 '']
+        expected = ('<ol><li><b><i>Text in bold and italics</i></b></li>'
+                    + '<li><b><i>Kinda same but not really</b></i></li>'
+                    + '<li><span class="inline-code">Code __ignoring__ '
+                    + '**special** chars</span></li>'
+                    + '<li><a target="_blank" href="https://pokerfacowaty.com'
+                    + '"><b>link in bold</b></a></li>'
+                    + '<li><a target="_blank" href="https://pokerfacowaty.com"'
+                    + '><b><i>link bold both</i></b></a></li></ol>')
         paml2html.add_ordered_list(olist, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
@@ -313,10 +460,21 @@ with a comment.
     # Mixed lists
 
     def test_mixed_list_starting_unordered(self):
-        mlist = ['- Element 1\n', '- Element 2\n', '    1. Subelement 1\n',
-                 '    2. Subelement 2\n', '        - Subsubelement\n',
-                 '    3. Subelement 3\n', '- Element 3\n', '']
-        expected = '<ul><li>Element 1</li><li>Element 2</li><ol><li>Subelement 1</li><li>Subelement 2</li><ul><li>Subsubelement</li></ul><li>Subelement 3</li></ol><li>Element 3</li></ul>'
+        mlist = ['- Element 1\n',
+                 '- Element 2\n',
+                 '    1. Subelement 1\n',
+                 '    2. Subelement 2\n',
+                 '        - Subsubelement\n',
+                 '    3. Subelement 3\n',
+                 '- Element 3\n',
+                 '']
+        expected = ('<ul><li>Element 1</li>'
+                    + '<li>Element 2</li>'
+                    + '<ol><li>Subelement 1</li>'
+                    + '<li>Subelement 2</li>'
+                    + '<ul><li>Subsubelement</li></ul>'
+                    + '<li>Subelement 3</li></ol>'
+                    + '<li>Element 3</li></ul>')
         paml2html.add_unordered_list(mlist, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
@@ -324,10 +482,21 @@ with a comment.
         self.assertEqual(result, expected)
 
     def test_mixed_list_starting_ordered(self):
-        mlist = ['1. Element 1\n', '2. Element 2\n', '    - Subelement 1\n',
-                 '    - Subelement 2\n', '        1. Subsubelement\n',
-                 '    - Subelement 3\n', '3. Element 3\n', '']
-        expected = '<ol><li>Element 1</li><li>Element 2</li><ul><li>Subelement 1</li><li>Subelement 2</li><ol><li>Subsubelement</li></ol><li>Subelement 3</li></ul><li>Element 3</li></ol>'
+        mlist = ['1. Element 1\n',
+                 '2. Element 2\n',
+                 '    - Subelement 1\n',
+                 '    - Subelement 2\n',
+                 '        1. Subsubelement\n',
+                 '    - Subelement 3\n',
+                 '3. Element 3\n',
+                 '']
+        expected = ('<ol><li>Element 1</li>'
+                    + '<li>Element 2</li>'
+                    + '<ul><li>Subelement 1</li>'
+                    + '<li>Subelement 2</li>'
+                    + '<ol><li>Subsubelement</li></ol>'
+                    + '<li>Subelement 3</li>'
+                    + '</ul><li>Element 3</li></ol>')
         paml2html.add_ordered_list(mlist, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
@@ -337,8 +506,12 @@ with a comment.
     # Tables
 
     def test_table_with_headers(self):
-        table = ['| Head2 | 2Head |\n', '| ----- | ----- |\n', '| text  | text2 |\n', '']
-        expected = '<table><tr><th>Head2</th><th>2Head</th></tr><tr><td>text</td><td>text2</td></tr></table>'
+        table = ['| Head2 | 2Head |\n',
+                 '| ----- | ----- |\n',
+                 '| text  | text2 |\n',
+                 '']
+        expected = ('<table><tr><th>Head2</th><th>2Head</th></tr>'
+                    + '<tr><td>text</td><td>text2</td></tr></table>')
         paml2html.add_table(table, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
@@ -346,12 +519,17 @@ with a comment.
         self.assertEqual(result, expected)
 
     def test_table_with_headers_with_decorations(self):
-        table = ['| Head | Shoulders |\n',
-                 '| -----                   | -----              |\n',
-                 '| **bold of you to**              | ``*ass*ume code`` |\n',
-                 '| [by](https://pokerfacowaty.com) | __will work__     |\n',
+        table = ['|              Head               |     Shoulders     |\n',
+                 '|              -----              |       -----       |\n',
+                 '|       **bold of you to**        | ``*ass*ume code`` |\n',
+                 '| [by](https://pokerfacowaty.com) |   __will work__   |\n',
                  '']
-        expected = '<table><tr><th>Head</th><th>Shoulders</th></tr><tr><td><b>bold of you to</b></td><td><span class="inline-code">*ass*ume code</span></td></tr><tr><td><a target="_blank" href="https://pokerfacowaty.com">by</a></td><td><i>will work</i></td></tr></table>'
+        expected = ('<table><tr><th>Head</th><th>Shoulders</th>'
+                    + '</tr><tr><td><b>bold of you to</b></td>'
+                    + '<td><span class="inline-code">*ass*ume code</span></td>'
+                    + '</tr><tr><td><a target="_blank" '
+                    + 'href="https://pokerfacowaty.com">by</a></td>'
+                    + '<td><i>will work</i></td></tr></table>')
         paml2html.add_table(table, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
@@ -359,8 +537,11 @@ with a comment.
         self.assertEqual(result, expected)
 
     def test_table_without_headers(self):
-        table = ['| a | b |\n', '| c | d |\n', '']
-        expected = '<table><tr><td>a</td><td>b</td></tr><tr><td>c</td><td>d</td></tr></table>'
+        table = ['| a | b |\n',
+                 '| c | d |\n',
+                 '']
+        expected = ('<table><tr><td>a</td><td>b</td>'
+                    + '</tr><tr><td>c</td><td>d</td></tr></table>')
         paml2html.add_table(table, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
@@ -371,7 +552,11 @@ with a comment.
         table = ['| **bold of you to**              | ``*ass*ume code`` |\n',
                  '| [by](https://pokerfacowaty.com) | __will work__     |\n',
                  '']
-        expected = '<table><tr><td><b>bold of you to</b></td><td><span class="inline-code">*ass*ume code</span></td></tr><tr><td><a target="_blank" href="https://pokerfacowaty.com">by</a></td><td><i>will work</i></td></tr></table>'
+        expected = ('<table><tr><td><b>bold of you to</b></td><td>'
+                    + '<span class="inline-code">*ass*ume code</span></td>'
+                    + '</tr><tr><td><a target="_blank" '
+                    + 'href="https://pokerfacowaty.com">by</a></td>'
+                    + '<td><i>will work</i></td></tr></table>')
         paml2html.add_table(table, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
@@ -383,8 +568,14 @@ with a comment.
     # Text formatting
 
     def test_text_formatting(self):
-        text = '**This is bold __and now also italics** but not bold anymore__, ``while **this** __is__ all <code>`` and __this is a [link in italics](https://pokerfacowaty.com)__'
-        expected = ''''<b>This is bold <i>and now also italics</b> but not bold anymore</i>, <span class="inline-code">while **this** __is__ all &lt;code&gt;</span> and <i>this is a <a target="_blank" href="https://pokerfacowaty.com">link in italics</a></i>'''
+        text = ('**This is bold __and now also italics** but not bold '
+                + 'anymore__, ``while **this** __is__ all <code>`` and __this '
+                + 'is a [link in italics](https://pokerfacowaty.com)__')
+        expected = ('<b>This is bold <i>and now also italics</b> but not bold'
+                    + ' anymore</i>, <span class="inline-code">while **this** '
+                    + '__is__ all &lt;code&gt;</span> and <i>this is a <a '
+                    + 'target="_blank" href="https://pokerfacowaty.com">link '
+                    + 'in italics</a></i>')
         result = paml2html.format_txt(text)
         (paml2html.doc, paml2html.tag,
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
