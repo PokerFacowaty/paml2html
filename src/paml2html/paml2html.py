@@ -231,7 +231,9 @@ def add_command(paml_lines: list, i: int) -> int:
             doc.asis(format_txt(paml_lines[i].lstrip()
                      [1:paml_lines[i].lstrip().find('/*')]).rstrip())
 
-        if '/*' in paml_lines[i]:
+        if ('/*' in paml_lines[i]
+           and paml_lines[i][paml_lines[i].find('/*') + 2] != '*'):
+            # making sure '/**' isn't recognized as '/*' when '/*' is not there
             with tag('span', klass='same-line-comment'):
                 doc.asis(format_txt(paml_lines[i]
                                     [paml_lines[i].find('/*') + 2:
