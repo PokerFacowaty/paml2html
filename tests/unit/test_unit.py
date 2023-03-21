@@ -249,6 +249,51 @@ class TestPaml(unittest.TestCase):
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
         self.assertEqual(result, exp)
 
+    # Command
+
+    def test_command_no_comments(self):
+        comm = ['/Ctrl + E\n', '']
+        expected = ('<div class="command-box"><span class="command">Ctrl + E'
+                    + '</span></div>')
+        paml2html.add_command(comm, 0)
+        result = paml2html.doc.getvalue()
+        (paml2html.doc, paml2html.tag,
+         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
+        self.assertEqual(result, expected)
+
+    def test_command_with_comment(self):
+        comm = ['/Ctrl + E /* Comment */\n', '']
+        expected = ('<div class="command-box"><span class="command">Ctrl + E'
+                    + '</span><span class="same-line-comment">Comment'
+                    + '</span></div>')
+        paml2html.add_command(comm, 0)
+        result = paml2html.doc.getvalue()
+        (paml2html.doc, paml2html.tag,
+         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
+        self.assertEqual(result, expected)
+
+    def test_command_with_small_comment(self):
+        comm = ['/Ctrl + E /** Small comment **/\n', '']
+        expected = ('<div class="command-box"><span class="command">Ctrl + E'
+                    + '</span><div class="small-comment">Small comment</div>'
+                    + '</div>')
+        paml2html.add_command(comm, 0)
+        result = paml2html.doc.getvalue()
+        (paml2html.doc, paml2html.tag,
+         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
+        self.assertEqual(result, expected)
+
+    def test_command_with_both_comments(self):
+        comm = ['/Ctrl + E /* Comment */ /** Small comment **/\n', '']
+        expected = ('<div class="command-box"><span class="command">Ctrl + E'
+                    + '</span><span class="same-line-comment">Comment</span>'
+                    + '<div class="small-comment">Small comment</div></div>')
+        paml2html.add_command(comm, 0)
+        result = paml2html.doc.getvalue()
+        (paml2html.doc, paml2html.tag,
+         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
+        self.assertEqual(result, expected)
+
     # Code block
 
     def test_code_block_no_comments(self):
