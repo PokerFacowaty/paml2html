@@ -485,7 +485,6 @@ def add_table(paml_lines: list, i: int) -> int:
 
 
 def add_raw_html(paml_lines: list, i: int) -> int:
-    doc.asis('\n')
     i += 1
 
     while i < len(paml_lines):
@@ -493,7 +492,7 @@ def add_raw_html(paml_lines: list, i: int) -> int:
             i += 1
             break
         else:
-            doc.asis(paml_lines[i])
+            doc.asis(paml_lines[i].strip())
             i += 1
     return i
 

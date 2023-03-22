@@ -687,6 +687,60 @@ class TestPaml(unittest.TestCase):
 
     # Raw HTML
 
+    def test_raw_html_empty(self):
+        html = ['<\n', '>\n', '']
+        expected = ''
+        paml2html.add_raw_html(html, 0)
+        result = paml2html.doc.getvalue()
+        (paml2html.doc, paml2html.tag,
+         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
+        self.assertEqual(result, expected)
+
+    def test_raw_html_empty_line(self):
+        html = ['<\n', '\n', '>\n', '']
+        expected = ''
+        paml2html.add_raw_html(html, 0)
+        result = paml2html.doc.getvalue()
+        (paml2html.doc, paml2html.tag,
+         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
+        self.assertEqual(result, expected)
+
+    def test_raw_html_content_line(self):
+        html = ['<\n',
+                '<p>A paragraph</p>\n',
+                '>\n', '']
+        expected = '<p>A paragraph</p>'
+        paml2html.add_raw_html(html, 0)
+        result = paml2html.doc.getvalue()
+        (paml2html.doc, paml2html.tag,
+         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
+        self.assertEqual(result, expected)
+
+    def test_raw_html_content_multiple_lines(self):
+        html = ['<\n',
+                '<p>A paragraph</p>\n',
+                '<div>A div</div>\n',
+                '>\n', '']
+        expected = '<p>A paragraph</p><div>A div</div>'
+        paml2html.add_raw_html(html, 0)
+        result = paml2html.doc.getvalue()
+        (paml2html.doc, paml2html.tag,
+         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
+        self.assertEqual(result, expected)
+
+    def test_raw_html_content_multiple_lines_with_breaks(self):
+        html = ['<\n',
+                '<p>A paragraph</p>\n',
+                '\n',
+                '<div>A div</div>\n',
+                '>\n', '']
+        expected = '<p>A paragraph</p><div>A div</div>'
+        paml2html.add_raw_html(html, 0)
+        result = paml2html.doc.getvalue()
+        (paml2html.doc, paml2html.tag,
+         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
+        self.assertEqual(result, expected)
+
     # Simple text formatting
     # NOTE: more extensive testing on formatting is done in a separate file
 
