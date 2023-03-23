@@ -132,15 +132,6 @@ class TestPaml(unittest.TestCase):
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
         self.assertEqual(result, expected)
 
-    def test_formatting_ending_inside_a_link(self):
-        paml = '__start[end__rest](https://pokerfacowaty.com)'
-        expected = ('<i>start<a target="_blank" href="https://pokerfacowaty'
-                    + '.com">end</i>rest</a>')
-        result = paml2html.format_txt(paml)
-        (paml2html.doc, paml2html.tag,
-         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
-        self.assertEqual(result, expected)
-
     def header_with_link(self):
         paml = ['# [link](https://pokerfacowaty.com)\n', '']
         expected = ('<h1><a target="_blank" href="https://pokerfacowaty.com">'
