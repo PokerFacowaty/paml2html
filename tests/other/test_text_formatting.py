@@ -425,3 +425,59 @@ class TestPaml(unittest.TestCase):
         (paml2html.doc, paml2html.tag,
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
         self.assertEqual(result, expected)
+
+    def test_mixed_list_links_starting_unordered(self):
+        paml = ['- [link](https://pokerfacowaty.com)\n',
+                '    1. [link](https://pokerfacowaty.com)\n',
+                '- [link](https://pokerfacowaty.com)\n', '']
+        expected = ('<ul><li><a target="_blank" href="https://pokerfacowaty'
+                    + '.com">link</a></li><ol><li><a target="_blank" href="'
+                    + 'https://pokerfacowaty.com">link</a></li></ol><li>'
+                    + '<a target="_blank" href="https://pokerfacowaty.com">'
+                    + 'link</a></li></ul>')
+        paml2html.add_unordered_list(paml, 0)
+        result = paml2html.doc.getvalue()
+        (paml2html.doc, paml2html.tag,
+         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
+        self.assertEqual(result, expected)
+
+    def test_mixed_list_links_starting_ordered(self):
+        paml = ['1. [link](https://pokerfacowaty.com)\n',
+                '    - [link](https://pokerfacowaty.com)\n',
+                '2. [link](https://pokerfacowaty.com)\n', '']
+        expected = ('<ol><li><a target="_blank" href="https://pokerfacowaty'
+                    + '.com">link</a></li><ul><li><a target="_blank" href="'
+                    + 'https://pokerfacowaty.com">link</a></li></ul><li>'
+                    + '<a target="_blank" href="https://pokerfacowaty.com">'
+                    + 'link</a></li></ol>')
+        paml2html.add_ordered_list(paml, 0)
+        result = paml2html.doc.getvalue()
+        (paml2html.doc, paml2html.tag,
+         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
+        self.assertEqual(result, expected)
+
+    def test_mixed_list_italics_starting_unordered(self):
+        paml = ['- __Italics__\n',
+                '    1. __Italics__\n',
+                '- __Italics__\n', '']
+        expected = ('<ul><li><i>Italics</i></li>'
+                    + '<ol><li><i>Italics</i></li></ol>'
+                    + '<li><i>Italics</i></li></ul>')
+        paml2html.add_unordered_list(paml, 0)
+        result = paml2html.doc.getvalue()
+        (paml2html.doc, paml2html.tag,
+         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
+        self.assertEqual(result, expected)
+
+    def test_mixed_list_italics_starting_ordered(self):
+        paml = ['1. __Italics__\n',
+                '    - __Italics__\n',
+                '2. __Italics__\n', '']
+        expected = ('<ol><li><i>Italics</i></li>'
+                    + '<ul><li><i>Italics</i></li>'
+                    + '</ul><li><i>Italics</i></li></ol>')
+        paml2html.add_ordered_list(paml, 0)
+        result = paml2html.doc.getvalue()
+        (paml2html.doc, paml2html.tag,
+         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
+        self.assertEqual(result, expected)
