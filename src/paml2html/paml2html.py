@@ -276,7 +276,8 @@ def add_code_line(paml_lines: list, i: int) -> int:
                          paml_lines[i].find('**/')].strip()))
         i += 1
         with tag('code', klass='line-code'):
-            text(paml_lines[i].lstrip())
+            # Removing trailing whitespaces and the new line at the end of line
+            text(paml_lines[i].strip())
         i += 2
     return i
 
@@ -300,7 +301,8 @@ def add_code_block(paml_lines: list, i: int) -> int:
         code_to_add = []
         while i < len(paml_lines):
             if paml_lines[i].strip() == '```':
-                # code_to_add.append(paml_lines[i][:paml_lines[i].find('```')])
+                # Removing a useless new line at the end of the last line
+                code_to_add[-1] = code_to_add[-1].rstrip()
                 with tag('code', klass='block-code'):
                     with tag('pre'):
                         text(''.join(code_to_add))
