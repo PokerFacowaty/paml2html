@@ -575,11 +575,17 @@ def decorate_txt(txt: str) -> str:
             i += result.rfind("</span>")
             continue
         elif result[i:i + 2] in tags.keys():
-            # tag_start = result.find(result[i + 2])
-            tag_end = result.rfind(result[i:i + 2])
+            # The end is the first tag of the same type found starting at
+            # after the opening tag
+            tag_end = i + 2 + result[i + 2:].find(result[i:i + 2])
+
             result = (result[:i] + tags[result[i:i + 2]][0]
+                      # ^ until tag    ^ opening tag from dict
                       + result[i + 2:tag_end] + tags[result[i:i + 2]][1]
+                      # ^ inside the tag        ^ closing tag from dict
                       + result[tag_end + 2:])
+            #           ^ rest of text
+
             # i + 2 since all tags have a length of 2 (like **) and it's easier
             # than making a solution for all lengths that's useless for now
             # will need rewriting if longer tags are needed
