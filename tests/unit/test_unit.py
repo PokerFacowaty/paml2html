@@ -827,6 +827,14 @@ class TestPaml(unittest.TestCase):
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
         self.assertEqual(result, expected)
 
+    def test_strikethrough(self):
+        s = '~~Strikethrough~~'
+        expected = '<s>Strikethrough</s>'
+        result = paml2html.decorate_txt(s)
+        (paml2html.doc, paml2html.tag,
+         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
+        self.assertEqual(result, expected)
+
 
 if __name__ == '__main__':
     unittest.main()
