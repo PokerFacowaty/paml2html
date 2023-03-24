@@ -481,3 +481,57 @@ class TestPaml(unittest.TestCase):
         (paml2html.doc, paml2html.tag,
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
         self.assertEqual(result, expected)
+
+    def test_table_with_headers_links(self):
+        paml = ['| [link](example.com) | [link](example.com) |\n',
+                '|         ---         |         ---         |\n',
+                '| [link](example.com) | [link](example.com) |\n', '']
+        expected = ('<table><tr><th><a target="_blank" href="example.com">'
+                    + 'link</a></th><th><a target="_blank" href="example.com">'
+                    + 'link</a></th></tr><tr><td><a target="_blank" href="'
+                    + 'example.com">link</a></td><td><a target="_blank" '
+                    + 'href="example.com">link</a></td></tr></table>')
+        paml2html.add_table(paml, 0)
+        result = paml2html.doc.getvalue()
+        (paml2html.doc, paml2html.tag,
+         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
+        self.assertEqual(result, expected)
+
+    def test_table_with_headers_italics(self):
+        paml = ['| __Italics__ | __Italics__ |\n',
+                '|     ---     |     ---     |\n',
+                '| __Italics__ | __Italics__ |\n', '']
+        expected = ('<table><tr><th><i>Italics</i></th><th><i>Italics</i>'
+                    + '</th></tr><tr><td><i>Italics</i></td><td><i>Italics</i>'
+                    + '</td></tr></table>')
+        paml2html.add_table(paml, 0)
+        result = paml2html.doc.getvalue()
+        (paml2html.doc, paml2html.tag,
+         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
+        self.assertEqual(result, expected)
+
+    def test_table_without_headers_links(self):
+        paml = ['| [link](example.com) | [link](example.com) |\n',
+                '| [link](example.com) | [link](example.com) |\n', '']
+        expected = ('<table><tr><td><a target="_blank" href="example.com">link'
+                    + '</a></td><td><a target="_blank" href="example.com">link'
+                    + '</a></td></tr><tr><td><a target="_blank" href="example'
+                    + '.com">link</a></td><td><a target="_blank" href="example'
+                    + '.com">link</a></td></tr></table>')
+        paml2html.add_table(paml, 0)
+        result = paml2html.doc.getvalue()
+        (paml2html.doc, paml2html.tag,
+         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
+        self.assertEqual(result, expected)
+
+    def test_table_without_headers_italics(self):
+        paml = ['| __Italics__ | __Italics__ |\n',
+                '| __Italics__ | __Italics__ |\n', '']
+        expected = ('<table><tr><td><i>Italics</i></td><td><i>Italics</i></td>'
+                    + '</tr><tr><td><i>Italics</i></td><td><i>Italics</i></td>'
+                    + '</tr></table>')
+        paml2html.add_table(paml, 0)
+        result = paml2html.doc.getvalue()
+        (paml2html.doc, paml2html.tag,
+         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
+        self.assertEqual(result, expected)
