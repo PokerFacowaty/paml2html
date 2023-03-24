@@ -196,3 +196,57 @@ class TestPaml(unittest.TestCase):
         (paml2html.doc, paml2html.tag,
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
         self.assertEqual(result, expected)
+
+    def test_code_line_comment_link(self):
+        paml = ['```/* [link](https://pokerfacowaty.com) */\n',
+                'This is a code line\n',
+                '```\n', '']
+        expected = ('<div class="line-code-box"><div class="line-code-comment"'
+                    + '><a target="_blank" href="https://pokerfacowaty.com">'
+                    + 'link</a></div><code class="line-code">This is a code '
+                    + 'line</code></div>')
+        paml2html.add_code_line(paml, 0)
+        result = paml2html.doc.getvalue()
+        (paml2html.doc, paml2html.tag,
+         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
+        self.assertEqual(result, expected)
+
+    def test_code_line_small_comment_link(self):
+        paml = ['```/** [link](https://pokerfacowaty.com) **/\n',
+                'This is a code line\n',
+                '```\n', '']
+        expected = ('<div class="line-code-box"><div class="line-code-small-'
+                    + 'comment"><a target="_blank" href="https://pokerfacowaty'
+                    + '.com">link</a></div><code class="line-code">This is a '
+                    + 'code line</code></div>')
+        paml2html.add_code_line(paml, 0)
+        result = paml2html.doc.getvalue()
+        (paml2html.doc, paml2html.tag,
+         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
+        self.assertEqual(result, expected)
+
+    def test_code_line_comment_italics(self):
+        paml = ['```/* __Italics__ */\n',
+                'This is a code line\n',
+                '```\n', '']
+        expected = ('<div class="line-code-box"><div class="line-code-comment"'
+                    + '><i>Italics</i></div><code class="line-code">This is a '
+                    + 'code line</code></div>')
+        paml2html.add_code_line(paml, 0)
+        result = paml2html.doc.getvalue()
+        (paml2html.doc, paml2html.tag,
+         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
+        self.assertEqual(result, expected)
+
+    def test_code_line_small_comment_italics(self):
+        paml = ['```/** __Italics__ **/\n',
+                'This is a code line\n',
+                '```\n', '']
+        expected = ('<div class="line-code-box"><div class="line-code-small-'
+                    + 'comment"><i>Italics</i></div><code class="line-code">'
+                    + 'This is a code line</code></div>')
+        paml2html.add_code_line(paml, 0)
+        result = paml2html.doc.getvalue()
+        (paml2html.doc, paml2html.tag,
+         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
+        self.assertEqual(result, expected)
