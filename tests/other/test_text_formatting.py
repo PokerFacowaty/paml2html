@@ -250,3 +250,178 @@ class TestPaml(unittest.TestCase):
         (paml2html.doc, paml2html.tag,
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
         self.assertEqual(result, expected)
+
+    def test_code_block_comment_link(self):
+        paml = ['```/* [link](https://pokerfacowaty.com) */\n',
+                'This is\n',
+                'a code block\n',
+                '```\n', '']
+        expected = ('<div class="block-code-box"><div class="block-code-'
+                    + 'comment"><a target="_blank" href="https://pokerfacowaty'
+                    + '.com">link</a></div><code class="block-code"><pre>This '
+                    + 'is\na code block</pre></code></div>')
+        paml2html.add_code_block(paml, 0)
+        result = paml2html.doc.getvalue()
+        (paml2html.doc, paml2html.tag,
+         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
+        self.assertEqual(result, expected)
+
+    def test_code_block_small_comment_link(self):
+        paml = ['````/** [link](https://pokerfacowaty.com) **/\n',
+                'This is\n',
+                'a code block\n',
+                '```\n', '']
+        expected = ('<div class="block-code-box"><div class="block-code-small-'
+                    + 'comment"><a target="_blank" href="https://pokerfacowaty'
+                    + '.com">link</a></div><code class="block-code"><pre>This'
+                    + ' is\na code block</pre></code></div>')
+        paml2html.add_code_block(paml, 0)
+        result = paml2html.doc.getvalue()
+        (paml2html.doc, paml2html.tag,
+         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
+        self.assertEqual(result, expected)
+
+    def test_code_block_comment_italics(self):
+        paml = ['```/* __Italics__ */\n',
+                'This is\n',
+                'a code block\n',
+                '```\n', '']
+        expected = ('<div class="block-code-box"><div class="block-code-'
+                    + 'comment"><i>Italics</i></div><code class="block-code">'
+                    + '<pre>This is\na code block</pre></code></div>')
+        paml2html.add_code_block(paml, 0)
+        result = paml2html.doc.getvalue()
+        (paml2html.doc, paml2html.tag,
+         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
+        self.assertEqual(result, expected)
+
+    def test_code_block_small_comment_italics(self):
+        paml = ['```/** __Italics__ **/\n',
+                'This is\n',
+                'a code block\n',
+                '```\n', '']
+        expected = ('<div class="block-code-box"><div class="block-code-small-'
+                    + 'comment"><i>Italics</i></div><code class="block-code">'
+                    + '<pre>This is\na code block</pre></code></div>')
+        paml2html.add_code_block(paml, 0)
+        result = paml2html.doc.getvalue()
+        (paml2html.doc, paml2html.tag,
+         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
+        self.assertEqual(result, expected)
+
+    def test_paragraph_link(self):
+        paml = ['```{\n',
+                '[link](https://pokerfacowaty.com)\n',
+                '}\n', '']
+        expected = ('<div class="paragraph"><p><a target="_blank" '
+                    + 'href="https://pokerfacowaty.com">link</a></p></div>')
+        paml2html.add_paragraph(paml, 0)
+        result = paml2html.doc.getvalue()
+        (paml2html.doc, paml2html.tag,
+         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
+        self.assertEqual(result, expected)
+
+    def test_paragraph_italics(self):
+        paml = ['{\n',
+                '__Italics__\n',
+                '}\n', '']
+        expected = '<div class="paragraph"><p><i>Italics</i></p></div>'
+        paml2html.add_paragraph(paml, 0)
+        result = paml2html.doc.getvalue()
+        (paml2html.doc, paml2html.tag,
+         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
+        self.assertEqual(result, expected)
+
+    def test_unordered_list_link(self):
+        paml = ['- [link](https://pokerfacowaty.com)\n', '']
+        expected = ('<ul><li><a target="_blank" href="https://pokerfacowaty'
+                    + '.com">link</a></li></ul>')
+        paml2html.add_unordered_list(paml, 0)
+        result = paml2html.doc.getvalue()
+        (paml2html.doc, paml2html.tag,
+         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
+        self.assertEqual(result, expected)
+
+    def test_unordered_nested_list_link(self):
+        paml = ['- [link](https://pokerfacowaty.com)\n',
+                '    - [link](https://pokerfacowaty.com)\n',
+                '- [link](https://pokerfacowaty.com)\n', '']
+        expected = ('<ul><li><a target="_blank" href="https://pokerfacowaty'
+                    + '.com">link</a></li><ul><li><a target="_blank" href='
+                    + '"https://pokerfacowaty.com">link</a></li></ul><li>'
+                    + '<a target="_blank" href="https://pokerfacowaty.com">'
+                    + 'link</a></li></ul>')
+        paml2html.add_unordered_list(paml, 0)
+        result = paml2html.doc.getvalue()
+        (paml2html.doc, paml2html.tag,
+         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
+        self.assertEqual(result, expected)
+
+    def test_unordered_list_italics(self):
+        paml = ['- __Italics__\n', '']
+        expected = '<ul><li><i>Italics</i></li></ul>'
+        paml2html.add_unordered_list(paml, 0)
+        result = paml2html.doc.getvalue()
+        (paml2html.doc, paml2html.tag,
+         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
+        self.assertEqual(result, expected)
+
+    def test_unordered_nested_list_italics(self):
+        paml = ['- __Italics__\n',
+                '    - __Italics__\n',
+                '- __Italics__\n', '']
+        expected = ('<ul><li><i>Italics</i></li>'
+                    + '<ul><li><i>Italics</i></li></ul>'
+                    + '<li><i>Italics</i></li></ul>')
+        paml2html.add_unordered_list(paml, 0)
+        result = paml2html.doc.getvalue()
+        (paml2html.doc, paml2html.tag,
+         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
+        self.assertEqual(result, expected)
+
+    def test_ordered_list_link(self):
+        paml = ['1. [link](https://pokerfacowaty.com)\n', '']
+        expected = ('<ol><li><a target="_blank" href="https://pokerfacowaty'
+                    + '.com">link</a></li></ol>')
+        paml2html.add_ordered_list(paml, 0)
+        result = paml2html.doc.getvalue()
+        (paml2html.doc, paml2html.tag,
+         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
+        self.assertEqual(result, expected)
+
+    def test_ordered_nested_list_link(self):
+        paml = ['1. [link](https://pokerfacowaty.com)\n',
+                '    1. [link](https://pokerfacowaty.com)\n',
+                '2. [link](https://pokerfacowaty.com)\n', '']
+        expected = ('<ol><li><a target="_blank" href="https://pokerfacowaty'
+                    + '.com">link</a></li><ol><li><a target="_blank" '
+                    + 'href="https://pokerfacowaty.com">link</a></li></ol><li>'
+                    + '<a target="_blank" href="https://pokerfacowaty.com">'
+                    + 'link</a></li></ol>')
+        paml2html.add_ordered_list(paml, 0)
+        result = paml2html.doc.getvalue()
+        (paml2html.doc, paml2html.tag,
+         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
+        self.assertEqual(result, expected)
+
+    def test_ordered_list_italics(self):
+        paml = ['1. __Italics__\n', '']
+        expected = '<ol><li><i>Italics</i></li></ol>'
+        paml2html.add_ordered_list(paml, 0)
+        result = paml2html.doc.getvalue()
+        (paml2html.doc, paml2html.tag,
+         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
+        self.assertEqual(result, expected)
+
+    def test_ordered_nested_list_italics(self):
+        paml = ['1. __Italics__\n',
+                '    1. __Italics__\n',
+                '2. __Italics__\n', '']
+        expected = ('<ol><li><i>Italics</i></li>'
+                    + '<ol><li><i>Italics</i></li></ol>'
+                    + '<li><i>Italics</i></li></ol>')
+        paml2html.add_ordered_list(paml, 0)
+        result = paml2html.doc.getvalue()
+        (paml2html.doc, paml2html.tag,
+         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
+        self.assertEqual(result, expected)
