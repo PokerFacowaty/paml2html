@@ -21,6 +21,14 @@ import unittest
 
 
 class TestPaml(unittest.TestCase):
+    def test_text_bold_twice(self):
+        paml = '**Bold end** **Bold end**'
+        expected = '<b>Bold end</b> <b>Bold end</b>'
+        result = paml2html.format_txt(paml)
+        (paml2html.doc, paml2html.tag,
+         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
+        self.assertEqual(result, expected)
+
     def test_text_bold_and_italics(self):
         paml = '**__bold and italics__**'
         expected = '<b><i>bold and italics</i></b>'
