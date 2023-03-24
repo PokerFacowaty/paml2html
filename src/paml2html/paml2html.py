@@ -504,45 +504,23 @@ def format_txt(txt: str) -> str:
        by accident. All text sent into this function should already be inside
        yattag's doc.asis() function.'''
 
+    # Send to decorate, then check what's back for any links
+
     txt = txt.strip()
     result = ''
-    txt_components = []
-    j = 0
-    buffer = ''
-    while j < len(txt):
-        if txt[j:j+2] == '``':
-            if buffer:
-                txt_components.append(buffer)
-                buffer = ''
-            txt_components.append(txt[j:j + 1 + txt[j + 1:].find('``') + 2])
-            j += len(txt_components[-1])
-        elif txt[j] == '[' and txt[j:].find('](') != -1:
-            if buffer:
-                txt_components.append(buffer)
-                buffer = ''
-            link_component = ''
-            # link_start and link_end refer to the actual link inside ()
-            link_start = j + txt[j:].find('](')
-            link_end = link_start + txt[link_start:].find(')')
-            link_component = txt[j:link_end + 1]
-            txt_components.append(link_component)
-            j += len(txt_components[-1])
-        elif j == len(txt) - 1:
-            buffer += txt[j]
-            txt_components.append(buffer)
-            j += 1
-            break
-        else:
-            buffer += txt[j]
-            j += 1
+    decorated = decorate_txt(txt)
 
-    for t in txt_components:
-        if t.startswith('``'):
-            result += add_inline_code(t)
-        elif t.startswith('[') and t.find('](') != -1:
-            result += add_link(t)
+    i = 0
+    while i < len(decorated):
+        if decorated[i] == '[' and decorated[i:].find('](') != -1:
+            # link_start and link_end refer to the actual link inside ()
+            link_start = i + decorated[i:].find('](')
+            link_end = link_start + decorated[link_start:].find(')')
+            result += add_link(decorated[i:link_end + 1])
+            i += len(decorated[i:link_end + 1])
         else:
-            result += decorate_txt(t)
+            result += decorated[i]
+            i += 1
 
     return result
 
