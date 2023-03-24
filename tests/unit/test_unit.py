@@ -304,8 +304,7 @@ class TestPaml(unittest.TestCase):
                  ""]
         expected = ('<div class="block-code-box"><code class="block-code">'
                     + '<pre>This is a code block\n'
-                    + 'with no comment.\n'
-                    + '</pre></code></div>')
+                    + 'with no comment.</pre></code></div>')
         paml2html.add_code_block(block, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
@@ -321,8 +320,7 @@ class TestPaml(unittest.TestCase):
         expected = ('<div class="block-code-box">'
                     + '<div class="block-code-comment">Comment</div>'
                     + '<code class="block-code"><pre>This is a code block\n'
-                    + 'with a comment.\n'
-                    + '</pre></code></div>')
+                    + 'with a comment.</pre></code></div>')
         paml2html.add_code_block(block, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
@@ -339,8 +337,7 @@ class TestPaml(unittest.TestCase):
                     + '<div class="block-code-small-comment">Small comment'
                     + '</div><code class="block-code">'
                     + '<pre>This is a code block\n'
-                    + 'with a comment.\n'
-                    + '</pre></code></div>')
+                    + 'with a comment.</pre></code></div>')
         paml2html.add_code_block(block, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
@@ -357,8 +354,7 @@ class TestPaml(unittest.TestCase):
                     + '<div class="block-code-small-comment">'
                     + 'Small comment</div><code class="block-code">'
                     + '<pre>This is a code block\n'
-                    + 'with a comment.\n'
-                    + '</pre></code></div>')
+                    + 'with a comment.</pre></code></div>')
         paml2html.add_code_block(block, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
