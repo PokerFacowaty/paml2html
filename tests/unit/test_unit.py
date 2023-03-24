@@ -294,6 +294,60 @@ class TestPaml(unittest.TestCase):
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
         self.assertEqual(result, expected)
 
+    # Code line
+
+    def test_code_line_no_comments(self):
+        line = ['```\n',
+                'This is a code line\n',
+                '```\n', '']
+        expected = ('<div class="line-code-box"><code class="line-code">'
+                    + 'This is a code line</code></div>')
+        paml2html.add_code_line(line, 0)
+        result = paml2html.doc.getvalue()
+        (paml2html.doc, paml2html.tag,
+         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
+        self.assertEqual(result, expected)
+
+    def test_code_line_with_comment(self):
+        line = ['```/* Comment */\n',
+                'This is a code line\n',
+                '```\n', '']
+        expected = ('<div class="line-code-box"><div class="line-code-comment"'
+                    + '>Comment</div><code class="line-code">This is a code '
+                    + 'line</code></div>')
+        paml2html.add_code_line(line, 0)
+        result = paml2html.doc.getvalue()
+        (paml2html.doc, paml2html.tag,
+         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
+        self.assertEqual(result, expected)
+
+    def test_code_line_with_small_comment(self):
+        line = ['```/** Small comment **/\n',
+                'This is a code line\n',
+                '```\n', '']
+        expected = ('<div class="line-code-box"><div class="line-code-small-'
+                    + 'comment">Small comment</div><code class="line-code">'
+                    + 'This is a code line</code></div>')
+        paml2html.add_code_line(line, 0)
+        result = paml2html.doc.getvalue()
+        (paml2html.doc, paml2html.tag,
+         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
+        self.assertEqual(result, expected)
+
+    def test_code_line_with_both_comments(self):
+        line = ['```/* Comment *//** Small comment **/\n',
+                'This is a code line\n',
+                '```\n', '']
+        expected = ('<div class="line-code-box"><div class="line-code-comment"'
+                    + '>Comment</div><div class="line-code-small-comment">'
+                    + 'Small comment</div><code class="line-code">This is a '
+                    + 'code line</code></div>')
+        paml2html.add_code_line(line, 0)
+        result = paml2html.doc.getvalue()
+        (paml2html.doc, paml2html.tag,
+         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
+        self.assertEqual(result, expected)
+
     # Code block
 
     def test_code_block_no_comments(self):
