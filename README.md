@@ -1,4 +1,4 @@
-paml2html is a proof-of-concept converter making HTML from [P]oker's M[a]de-up [M]arkup [L]anguage. PaML docs can be found [here](https://paml.pokerfacowaty.com/)
+paml2html is a proof-of-concept converter making HTML from [P]oker's M[a]de-up [M]arkup [L]anguage. PaML's docs can be found [here](https://paml.pokerfacowaty.com/). You can also track PaML's & paml2html's development on my [Vikunja list!](https://vikunja.pokerfacowaty.com/share/xSbQeLXtVLmTpqdniQhIjmzLUgdxJwtpUStgIbya/auth)
 
 # Prerequisites
 - [Python 3](https://www.python.org/downloads/)
@@ -10,7 +10,7 @@ Download the files
 ```
 git clone https://github.com/PokerFacowaty/paml2html
 ```
-- ... or simply download `paml2html.py`
+- ... or simply download `src/paml2html.py`
 
 # Usage
 To use paml2html by itself, simply start it when in the same directory:
@@ -23,7 +23,7 @@ python paml2html.py
 python3 paml2html.py
 ```
 
-...or you can also import it and use in a different file with `import paml2html` by calling the `paml2html.convert_from_file()` function and providing a filepath
+...or you can also import it and use in a different file with `import paml2html` by calling the `paml2html.convert_from_file()` or `paml2html.convert_from_text()` function and providing a filepath or text
 
 
 ## Arguments
