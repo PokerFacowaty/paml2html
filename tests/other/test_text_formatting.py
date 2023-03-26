@@ -205,6 +205,24 @@ class TestPaml(unittest.TestCase):
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
         self.assertEqual(result, expected)
 
+    def test_code_line_with_link_inside(self):
+        paml = '``inline code with a [link](link.com)``'
+        expected = ('<span class="inline-code">inline code with a '
+                    + '[link](link.com)</span>')
+        result = paml2html.format_txt(paml)
+        (paml2html.doc, paml2html.tag,
+         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
+        self.assertEqual(result, expected)
+
+    def test_code_line_with_link_inside_and_text_around(self):
+        paml = 'textaround``inline code with a [link](link.com)`` text'
+        expected = ('textaround<span class="inline-code">inline code with a '
+                    + '[link](link.com)</span> text')
+        result = paml2html.format_txt(paml)
+        (paml2html.doc, paml2html.tag,
+         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
+        self.assertEqual(result, expected)
+
     def test_code_line_comment_link(self):
         paml = ['```/* [link](https://pokerfacowaty.com) */\n',
                 'This is a code line\n',

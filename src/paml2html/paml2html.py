@@ -504,29 +504,57 @@ def format_txt(txt: str) -> str:
        by accident. All text sent into this function should already be inside
        yattag's doc.asis() function.'''
 
-    # Send to decorate, then check what's back for any links
+    # Add inline code, send non-code parts to decorate, check them for links
 
     txt = txt.strip()
     result = ''
-    decorated = decorate_txt(txt)
 
     i = 0
-    while i < len(decorated):
-        if decorated[i] == '[' and decorated[i:].find('](') != -1:
-            # link_start and link_end refer to the actual link inside ()
-            link_start = i + decorated[i:].find('](')
-            link_end = link_start + decorated[link_start:].find(')')
-            result += add_link(decorated[i:link_end + 1])
-            i += len(decorated[i:link_end + 1])
+    buffer = ''
+    while i < len(txt):
+        if txt[i:i+2] == '``':
+            decorated = decorate_txt(buffer)
+            buffer = ''
+            with_links = find_links(decorated)
+            decorated = ''
+            result += with_links
+            with_links = ''
+
+            code = txt[i:i + txt[i+2:].find('``') + 4]
+            result += add_inline_code(code)
+            i += len(code)
         else:
-            result += decorated[i]
+            buffer += txt[i]
             i += 1
+
+    decorated = decorate_txt(buffer)
+    buffer = ''
+    with_links = find_links(decorated)
+    decorated = ''
+    result += with_links
+    with_links = ''
 
     return result
 
 
 def add_inline_code(txt: str) -> str:
     result = ('<span class="inline-code">' + escape(txt[2:-2]) + "</span>")
+    return result
+
+
+def find_links(txt: str) -> str:
+    result = ''
+    i = 0
+    while i < len(txt):
+        if txt[i] == '[' and txt[i:].find('](') != -1:
+            # link_start and link_end refer to the actual link inside ()
+            link_start = i + txt[i:].find('](')
+            link_end = link_start + txt[link_start:].find(')')
+            result += add_link(txt[i:link_end + 1])
+            i += len(txt[i:link_end + 1])
+        else:
+            result += txt[i]
+            i += 1
     return result
 
 
