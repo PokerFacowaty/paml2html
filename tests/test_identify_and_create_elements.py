@@ -1,7 +1,12 @@
 from src.paml2html import paml2html
 import unittest
 
-'''While running, paml2html starts with a fresh set of yattag's variables:
+'''These tests all test the identify_element function (it doesn't return
+   anything so testing it this way sounds like the most sensible option) as
+   well as creating new PaML elements with different types of content inside
+   them.
+
+   While running, paml2html starts with a fresh set of yattag's variables:
    doc, tag, text, line, as mentioned in yattag's docs: https://www.yattag.org/
 
    These are set every time convert_from_file or convert_from_text is called
@@ -27,7 +32,7 @@ class TestPaml(unittest.TestCase):
     def test_header1(self):
         header1 = ["# Header 1\n", ""]
         expected = "<h1>Header 1</h1>"
-        paml2html.add_header(header1, 0)
+        paml2html.identify_element(header1, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
@@ -36,7 +41,7 @@ class TestPaml(unittest.TestCase):
     def test_header2(self):
         header2 = ["## Header 2\n", ""]
         expected = "<h2>Header 2</h2>"
-        paml2html.add_header(header2, 0)
+        paml2html.identify_element(header2, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
@@ -45,7 +50,7 @@ class TestPaml(unittest.TestCase):
     def test_header3(self):
         header3 = ["### Header 3\n", ""]
         expected = "<h3>Header 3</h3>"
-        paml2html.add_header(header3, 0)
+        paml2html.identify_element(header3, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
@@ -54,7 +59,7 @@ class TestPaml(unittest.TestCase):
     def test_header4(self):
         header4 = ["#### Header 4\n", ""]
         expected = "<h4>Header 4</h4>"
-        paml2html.add_header(header4, 0)
+        paml2html.identify_element(header4, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
@@ -63,7 +68,7 @@ class TestPaml(unittest.TestCase):
     def test_header5(self):
         header5 = ["##### Header 5\n", ""]
         expected = "<h5>Header 5</h5>"
-        paml2html.add_header(header5, 0)
+        paml2html.identify_element(header5, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
@@ -72,7 +77,7 @@ class TestPaml(unittest.TestCase):
     def test_header6(self):
         header6 = ["###### Header 6\n", ""]
         expected = "<h6>Header 6</h6>"
-        paml2html.add_header(header6, 0)
+        paml2html.identify_element(header6, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
@@ -85,7 +90,7 @@ class TestPaml(unittest.TestCase):
         exp = ('<div class="collapsible-box-half-left"><details>'
                + '<summary class="header"><span class="icon">➤</span> coll'
                + '</summary></details></div>')
-        paml2html.add_collapsible_box(coll, 0)
+        paml2html.identify_element(coll, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
@@ -104,7 +109,7 @@ class TestPaml(unittest.TestCase):
                + '"command">Ctrl + E</span><span class="same-line-comment">'
                + 'Comment</span><div class="small-comment">Small comment</div>'
                + '</div></div></details></div>')
-        paml2html.add_collapsible_box(coll, 0)
+        paml2html.identify_element(coll, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
@@ -114,7 +119,7 @@ class TestPaml(unittest.TestCase):
         coll = ['>l coll\n', '']
         exp = ('<div class="collapsible-box-half-left"><details>'
                + '<summary class="header">coll</summary></details></div>')
-        paml2html.add_collapsible_box(coll, 0)
+        paml2html.identify_element(coll, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
@@ -125,7 +130,7 @@ class TestPaml(unittest.TestCase):
         exp = ('<div class="collapsible-box-half-right"><details>'
                + '<summary class="header"><span class="icon">➤</span> coll'
                + '</summary></details></div>')
-        paml2html.add_collapsible_box(coll, 0)
+        paml2html.identify_element(coll, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
@@ -135,7 +140,7 @@ class TestPaml(unittest.TestCase):
         coll = ['>r coll\n', '']
         exp = ('<div class="collapsible-box-half-right"><details>'
                + '<summary class="header">coll</summary></details></div>')
-        paml2html.add_collapsible_box(coll, 0)
+        paml2html.identify_element(coll, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
@@ -146,7 +151,7 @@ class TestPaml(unittest.TestCase):
         exp = ('<div class="collapsible-box-full"><details>'
                + '<summary class="header"><span class="icon">➤</span> coll'
                + '</summary></details></div>')
-        paml2html.add_collapsible_box(coll, 0)
+        paml2html.identify_element(coll, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
@@ -156,7 +161,7 @@ class TestPaml(unittest.TestCase):
         coll = ['>f coll\n', '']
         exp = ('<div class="collapsible-box-full"><details>'
                + '<summary class="header">coll</summary></details></div>')
-        paml2html.add_collapsible_box(coll, 0)
+        paml2html.identify_element(coll, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
@@ -172,7 +177,7 @@ class TestPaml(unittest.TestCase):
                + '<details><summary class="header">'
                + '<span class="icon">➤</span> nested collapsible</summary>'
                + '</details></details></div>')
-        paml2html.add_collapsible_box(coll, 0)
+        paml2html.identify_element(coll, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
@@ -193,7 +198,7 @@ class TestPaml(unittest.TestCase):
 
                + '<details><summary class="header"><span class="icon">➤</span>'
                + ' collapsible</summary></details></details></div>')
-        paml2html.add_collapsible_box(coll, 0)
+        paml2html.identify_element(coll, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
@@ -215,7 +220,7 @@ class TestPaml(unittest.TestCase):
                + '<span class="same-line-comment">Comment</span>'
                + '<div class="small-comment">Small comment</div></div></div>'
                + '</details></details></div>')
-        paml2html.add_collapsible_box(coll, 0)
+        paml2html.identify_element(coll, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
@@ -243,7 +248,7 @@ class TestPaml(unittest.TestCase):
                + '<span class="same-line-comment">Comment</span>'
                + '<div class="small-comment">Small comment</div>'
                + '</div></div></details></details></div>')
-        paml2html.add_collapsible_box(coll, 0)
+        paml2html.identify_element(coll, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
@@ -255,7 +260,7 @@ class TestPaml(unittest.TestCase):
         comm = ['/Ctrl + E\n', '']
         expected = ('<div class="command-box"><span class="command">Ctrl + E'
                     + '</span></div>')
-        paml2html.add_command(comm, 0)
+        paml2html.identify_element(comm, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
@@ -266,7 +271,7 @@ class TestPaml(unittest.TestCase):
         expected = ('<div class="command-box"><span class="command">Ctrl + E'
                     + '</span><span class="same-line-comment">Comment'
                     + '</span></div>')
-        paml2html.add_command(comm, 0)
+        paml2html.identify_element(comm, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
@@ -277,7 +282,7 @@ class TestPaml(unittest.TestCase):
         expected = ('<div class="command-box"><span class="command">Ctrl + E'
                     + '</span><div class="small-comment">Small comment</div>'
                     + '</div>')
-        paml2html.add_command(comm, 0)
+        paml2html.identify_element(comm, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
@@ -288,7 +293,7 @@ class TestPaml(unittest.TestCase):
         expected = ('<div class="command-box"><span class="command">Ctrl + E'
                     + '</span><span class="same-line-comment">Comment</span>'
                     + '<div class="small-comment">Small comment</div></div>')
-        paml2html.add_command(comm, 0)
+        paml2html.identify_element(comm, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
@@ -302,7 +307,7 @@ class TestPaml(unittest.TestCase):
                 '```\n', '']
         expected = ('<div class="line-code-box"><code class="line-code">'
                     + 'This is a code line</code></div>')
-        paml2html.add_code_line(line, 0)
+        paml2html.identify_element(line, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
@@ -315,7 +320,7 @@ class TestPaml(unittest.TestCase):
         expected = ('<div class="line-code-box"><div class="line-code-comment"'
                     + '>Comment</div><code class="line-code">This is a code '
                     + 'line</code></div>')
-        paml2html.add_code_line(line, 0)
+        paml2html.identify_element(line, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
@@ -328,7 +333,7 @@ class TestPaml(unittest.TestCase):
         expected = ('<div class="line-code-box"><div class="line-code-small-'
                     + 'comment">Small comment</div><code class="line-code">'
                     + 'This is a code line</code></div>')
-        paml2html.add_code_line(line, 0)
+        paml2html.identify_element(line, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
@@ -342,7 +347,7 @@ class TestPaml(unittest.TestCase):
                     + '>Comment</div><div class="line-code-small-comment">'
                     + 'Small comment</div><code class="line-code">This is a '
                     + 'code line</code></div>')
-        paml2html.add_code_line(line, 0)
+        paml2html.identify_element(line, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
@@ -359,7 +364,7 @@ class TestPaml(unittest.TestCase):
         expected = ('<div class="block-code-box"><code class="block-code">'
                     + '<pre>This is a code block\n'
                     + 'with no comment.</pre></code></div>')
-        paml2html.add_code_block(block, 0)
+        paml2html.identify_element(block, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
@@ -375,7 +380,7 @@ class TestPaml(unittest.TestCase):
                     + '<div class="block-code-comment">Comment</div>'
                     + '<code class="block-code"><pre>This is a code block\n'
                     + 'with a comment.</pre></code></div>')
-        paml2html.add_code_block(block, 0)
+        paml2html.identify_element(block, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
@@ -392,7 +397,7 @@ class TestPaml(unittest.TestCase):
                     + '</div><code class="block-code">'
                     + '<pre>This is a code block\n'
                     + 'with a comment.</pre></code></div>')
-        paml2html.add_code_block(block, 0)
+        paml2html.identify_element(block, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
@@ -409,7 +414,7 @@ class TestPaml(unittest.TestCase):
                     + 'Small comment</div><code class="block-code">'
                     + '<pre>This is a code block\n'
                     + 'with a comment.</pre></code></div>')
-        paml2html.add_code_block(block, 0)
+        paml2html.identify_element(block, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
@@ -421,7 +426,7 @@ class TestPaml(unittest.TestCase):
         image = ['![alt text](image.png)\n',
                  '']
         expected = '<img alt="alt text" src="image.png" />'
-        paml2html.add_image(image, 0)
+        paml2html.identify_element(image, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
@@ -432,7 +437,7 @@ class TestPaml(unittest.TestCase):
     def test_empty_paragraph(self):
         para = ['{\n', '}\n', '']
         expected = '<div class="paragraph"><p></p></div>'
-        paml2html.add_paragraph(para, 0)
+        paml2html.identify_element(para, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
@@ -441,7 +446,7 @@ class TestPaml(unittest.TestCase):
     def test_empty_one_line_paragraph(self):
         para = ['{\n', '\n', '}\n', '']
         expected = '<div class="paragraph"><p></p></div>'
-        paml2html.add_paragraph(para, 0)
+        paml2html.identify_element(para, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
@@ -453,7 +458,7 @@ class TestPaml(unittest.TestCase):
                 '}\n',
                 '']
         expected = '<div class="paragraph"><p>Simple paragraph</p></div>'
-        paml2html.add_paragraph(para, 0)
+        paml2html.identify_element(para, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
@@ -469,7 +474,7 @@ class TestPaml(unittest.TestCase):
                 '']
         expected = ('<div class="paragraph">'
                     + '<p>Paragraph with 4 spaces</p></div>')
-        paml2html.add_paragraph(para, 0)
+        paml2html.identify_element(para, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
@@ -484,7 +489,7 @@ class TestPaml(unittest.TestCase):
                 '']
         expected = ('<div class="paragraph"><p>Paragraph with no indentation'
                     + '<br><br>Second paragraph</p></div>')
-        paml2html.add_paragraph(para, 0)
+        paml2html.identify_element(para, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
@@ -502,7 +507,7 @@ class TestPaml(unittest.TestCase):
                 '']
         expected = ('<div class="paragraph"><p>Paragraph with 4 spaces'
                     + '<br><br>Second paragraph with 4 spaces</p></div>')
-        paml2html.add_paragraph(para, 0)
+        paml2html.identify_element(para, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
@@ -516,7 +521,7 @@ class TestPaml(unittest.TestCase):
         expected = ('<div class="paragraph"><img alt="alt text" '
                     + 'src="image.png" class="img-half-left" />'
                     + '<p>some text</p></div>')
-        paml2html.add_paragraph(para, 0)
+        paml2html.identify_element(para, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
@@ -530,7 +535,7 @@ class TestPaml(unittest.TestCase):
         expected = ('<div class="paragraph"><img alt="alt text" '
                     + 'src="image.png" class="img-half-right" />'
                     + '<p>some text</p></div>')
-        paml2html.add_paragraph(para, 0)
+        paml2html.identify_element(para, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
@@ -541,7 +546,7 @@ class TestPaml(unittest.TestCase):
     def test_unordered_list_with_single_element(self):
         ulist = ['- Element\n', '']
         expected = '<ul><li>Element</li></ul>'
-        paml2html.add_unordered_list(ulist, 0)
+        paml2html.identify_element(ulist, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
@@ -555,7 +560,7 @@ class TestPaml(unittest.TestCase):
         expected = ('<ul><li>Element 1</li>'
                     + '<li>Element 2</li>'
                     + '<li>Element 3</li></ul>')
-        paml2html.add_unordered_list(ulist, 0)
+        paml2html.identify_element(ulist, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
@@ -568,7 +573,7 @@ class TestPaml(unittest.TestCase):
         expected = ('<ul><li>Element 1</li>'
                     + '<ul><li>Subelement</li></ul>'
                     + '<li>Element 2</li></ul>')
-        paml2html.add_unordered_list(ulist, 0)
+        paml2html.identify_element(ulist, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
@@ -585,7 +590,7 @@ class TestPaml(unittest.TestCase):
                     + '<ul><li>Subsubelement</li></ul>'
                     + '<li>Subelement 2</li></ul>'
                     + '<li>Element 2</li></ul>')
-        paml2html.add_unordered_list(ulist, 0)
+        paml2html.identify_element(ulist, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
@@ -596,7 +601,7 @@ class TestPaml(unittest.TestCase):
     def test_ordered_list_with_single_element(self):
         olist = ['1. Element\n', '']
         expected = ('<ol><li>Element</li></ol>')
-        paml2html.add_ordered_list(olist, 0)
+        paml2html.identify_element(olist, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
@@ -610,7 +615,7 @@ class TestPaml(unittest.TestCase):
         expected = ('<ol><li>Element</li>'
                     + '<li>Element</li>'
                     + '<li>Element</li></ol>')
-        paml2html.add_ordered_list(olist, 0)
+        paml2html.identify_element(olist, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
@@ -623,7 +628,7 @@ class TestPaml(unittest.TestCase):
         expected = ('<ol><li>Element 1</li>'
                     + '<ol><li>Subelement</li></ol>'
                     + '<li>Element 2</li></ol>')
-        paml2html.add_ordered_list(olist, 0)
+        paml2html.identify_element(olist, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
@@ -640,7 +645,7 @@ class TestPaml(unittest.TestCase):
                     + '<ol><li>Subsubelement</li></ol>'
                     + '<li>Subelement 2</li></ol>'
                     + '<li>Element 2</li></ol>')
-        paml2html.add_ordered_list(olist, 0)
+        paml2html.identify_element(olist, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
@@ -655,7 +660,7 @@ class TestPaml(unittest.TestCase):
         expected = ('<ul><li>Element 1</li>'
                     + '<ol><li>Subelement 1</li></ol>'
                     + '<li>Element 2</li></ul>')
-        paml2html.add_unordered_list(mlist, 0)
+        paml2html.identify_element(mlist, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
@@ -672,7 +677,7 @@ class TestPaml(unittest.TestCase):
                     + '<ul><li>Subsubelement</li></ul>'
                     + '<li>Subelement 2</li></ol>'
                     + '<li>Element 2</li></ul>')
-        paml2html.add_unordered_list(mlist, 0)
+        paml2html.identify_element(mlist, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
@@ -685,7 +690,7 @@ class TestPaml(unittest.TestCase):
         expected = ('<ol><li>Element 1</li>'
                     + '<ul><li>Subelement 1</li></ul>'
                     + '<li>Element 2</li></ol>')
-        paml2html.add_ordered_list(mlist, 0)
+        paml2html.identify_element(mlist, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
@@ -702,7 +707,7 @@ class TestPaml(unittest.TestCase):
                     + '<ol><li>Subsubelement</li></ol>'
                     + '<li>Subelement 2</li></ul>'
                     + '<li>Element 2</li></ol>')
-        paml2html.add_ordered_list(mlist, 0)
+        paml2html.identify_element(mlist, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
@@ -717,7 +722,7 @@ class TestPaml(unittest.TestCase):
                  '']
         expected = ('<table><tr><th>Head2</th><th>2Head</th></tr>'
                     + '<tr><td>text</td><td>text2</td></tr></table>')
-        paml2html.add_table(table, 0)
+        paml2html.identify_element(table, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
@@ -729,7 +734,7 @@ class TestPaml(unittest.TestCase):
                  '']
         expected = ('<table><tr><td>a</td><td>b</td>'
                     + '</tr><tr><td>c</td><td>d</td></tr></table>')
-        paml2html.add_table(table, 0)
+        paml2html.identify_element(table, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
@@ -740,7 +745,7 @@ class TestPaml(unittest.TestCase):
     def test_raw_html_empty(self):
         html = ['<\n', '>\n', '']
         expected = ''
-        paml2html.add_raw_html(html, 0)
+        paml2html.identify_element(html, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
@@ -749,7 +754,7 @@ class TestPaml(unittest.TestCase):
     def test_raw_html_empty_line(self):
         html = ['<\n', '\n', '>\n', '']
         expected = ''
-        paml2html.add_raw_html(html, 0)
+        paml2html.identify_element(html, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
@@ -760,7 +765,7 @@ class TestPaml(unittest.TestCase):
                 '<p>A paragraph</p>\n',
                 '>\n', '']
         expected = '<p>A paragraph</p>'
-        paml2html.add_raw_html(html, 0)
+        paml2html.identify_element(html, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
@@ -772,7 +777,7 @@ class TestPaml(unittest.TestCase):
                 '<div>A div</div>\n',
                 '>\n', '']
         expected = '<p>A paragraph</p><div>A div</div>'
-        paml2html.add_raw_html(html, 0)
+        paml2html.identify_element(html, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
@@ -785,7 +790,7 @@ class TestPaml(unittest.TestCase):
                 '<div>A div</div>\n',
                 '>\n', '']
         expected = '<p>A paragraph</p><div>A div</div>'
-        paml2html.add_raw_html(html, 0)
+        paml2html.identify_element(html, 0)
         result = paml2html.doc.getvalue()
         (paml2html.doc, paml2html.tag,
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
