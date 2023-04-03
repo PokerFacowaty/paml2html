@@ -796,50 +796,6 @@ class TestPaml(unittest.TestCase):
          paml2html.text, paml2html.line) = paml2html.Doc().ttl()
         self.assertEqual(result, expected)
 
-    # Simple text formatting
-    # NOTE: more extensive testing on formatting is done in a separate file
-
-    def test_inline_code(self):
-        code = '``Inline code``'
-        expected = ('<span class="inline-code">Inline code</span>')
-        result = paml2html.add_inline_code(code)
-        (paml2html.doc, paml2html.tag,
-         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
-        self.assertEqual(result, expected)
-
-    def test_link(self):
-        link = '[link](https://pokerfacowaty.com)'
-        expected = ('<a target="_blank" href="https://pokerfacowaty.com">link'
-                    + '</a>')
-        result = paml2html.add_link(link)
-        (paml2html.doc, paml2html.tag,
-         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
-        self.assertEqual(result, expected)
-
-    def test_bold(self):
-        bold = '**Bold**'
-        expected = '<b>Bold</b>'
-        result = paml2html.decorate_txt(bold)
-        (paml2html.doc, paml2html.tag,
-         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
-        self.assertEqual(result, expected)
-
-    def test_italics(self):
-        it = '__Italics__'
-        expected = '<i>Italics</i>'
-        result = paml2html.decorate_txt(it)
-        (paml2html.doc, paml2html.tag,
-         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
-        self.assertEqual(result, expected)
-
-    def test_strikethrough(self):
-        s = '~~Strikethrough~~'
-        expected = '<s>Strikethrough</s>'
-        result = paml2html.decorate_txt(s)
-        (paml2html.doc, paml2html.tag,
-         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
-        self.assertEqual(result, expected)
-
 
 if __name__ == '__main__':
     unittest.main()

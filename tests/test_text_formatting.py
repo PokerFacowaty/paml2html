@@ -1,26 +1,64 @@
 from src.paml2html import paml2html
 import unittest
 
-'''This is the place for all tests related to complex text formatting using
-   format_txt(), such as mixing text decorators, decorating links etc. They are
-   separated from unit tests as I, following the advice of my neighborhood
-   tester, figured it would look cleaner and more organized this way.
+'''These tests start with simple test formatting, then move on to obscure tests
+   with just text (like decorations overlapping) and later on elements such as
+   lists are only tested with basic links and basic formatting, since they call
+   the same format_txt function with text for basic and advanced formatting,
+   the latter having been tested on just text in the early tests. There is no
+   need to test if a link with an overlapping decorations inside works in a
+   doubly-nested list.
 
-   These start with obscure tests with just text (like decorations overlapping)
-   and later on elements such as lists are only tested with basic links and
-   basic formatting, since they call the same format_txt function with text for
-   basic and advanced formatting, the latter having been tested on just text in
-   the early tests. There is no need to test if a link with an overlapping
-   decorations inside works in a doubly-nested list.
-
-   A rule of thumb for wheter a test is too obscure is usually whether GitHub
-   flavored markdown passes it. I've left some in that failed to conform to
-   this rule since they are an effect of the way paml2html works and didn't
-   need any changes. All of them have appriopriate docstrings.
+   A rule of thumb for wheter a test (or I guess an idea of what PaML should do
+   in the first place) is too obscure is usually whether GitHub flavored
+   markdown passes it. I've left some in that failed to conform to this rule
+   since they are an effect of the way paml2html works and didn't need any
+   changes. All of them have appriopriate docstrings.
    '''
 
 
 class TestPaml(unittest.TestCase):
+    def test_inline_code(self):
+        code = '``Inline code``'
+        expected = ('<span class="inline-code">Inline code</span>')
+        result = paml2html.add_inline_code(code)
+        (paml2html.doc, paml2html.tag,
+         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
+        self.assertEqual(result, expected)
+
+    def test_link(self):
+        link = '[link](https://pokerfacowaty.com)'
+        expected = ('<a target="_blank" href="https://pokerfacowaty.com">link'
+                    + '</a>')
+        result = paml2html.add_link(link)
+        (paml2html.doc, paml2html.tag,
+         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
+        self.assertEqual(result, expected)
+
+    def test_bold(self):
+        bold = '**Bold**'
+        expected = '<b>Bold</b>'
+        result = paml2html.decorate_txt(bold)
+        (paml2html.doc, paml2html.tag,
+         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
+        self.assertEqual(result, expected)
+
+    def test_italics(self):
+        it = '__Italics__'
+        expected = '<i>Italics</i>'
+        result = paml2html.decorate_txt(it)
+        (paml2html.doc, paml2html.tag,
+         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
+        self.assertEqual(result, expected)
+
+    def test_strikethrough(self):
+        s = '~~Strikethrough~~'
+        expected = '<s>Strikethrough</s>'
+        result = paml2html.decorate_txt(s)
+        (paml2html.doc, paml2html.tag,
+         paml2html.text, paml2html.line) = paml2html.Doc().ttl()
+        self.assertEqual(result, expected)
+
     def test_text_bold_twice(self):
         paml = '**Bold end** **Bold end**'
         expected = '<b>Bold end</b> <b>Bold end</b>'
