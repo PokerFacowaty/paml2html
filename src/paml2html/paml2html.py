@@ -86,31 +86,33 @@ def identify_element(paml_lines: list, i: int) -> int:
        could come up with was over 4 times slower. In terms of readability, the
        ifs are probably fine.'''
 
-    if paml_lines[i].strip() == '':
+    paml_line = paml_lines[i].strip()
+
+    if paml_line == '':
         # only spaces and \n on the line
         i += 1
-    elif paml_lines[i].lstrip().startswith('#'):
+    elif paml_line.startswith('#'):
         i = add_header(paml_lines, i)
-    elif paml_lines[i].lstrip().startswith('>'):
+    elif paml_line.startswith('>'):
         # '>' by itself does not necessarily mean a collapsible box, but all
         # the other cases nested collapsibles are handled by add_collapsible
         i = add_collapsible_box(paml_lines, i)
-    elif paml_lines[i].lstrip().startswith('/'):
+    elif paml_line.startswith('/'):
         i = add_command(paml_lines, i)
-    elif paml_lines[i].lstrip().startswith('```'):
+    elif paml_line.startswith('```'):
         # inline code is handled as part of format_txt
         i = add_code(paml_lines, i)
-    elif paml_lines[i].lstrip().startswith('!['):
+    elif paml_line.startswith('!['):
         i = add_image(paml_lines, i)
-    elif paml_lines[i].lstrip().startswith('{'):
+    elif paml_line.startswith('{'):
         i = add_paragraph(paml_lines, i)
-    elif paml_lines[i].lstrip().startswith('-'):
+    elif paml_line.startswith('-'):
         i = add_unordered_list(paml_lines, i)
-    elif paml_lines[i].lstrip()[0] in '0123456789':
+    elif paml_line[0] in '0123456789':
         i = add_ordered_list(paml_lines, i)
-    elif paml_lines[i].lstrip().startswith('|'):
+    elif paml_line.startswith('|'):
         i = add_table(paml_lines, i)
-    elif paml_lines[i].lstrip().startswith('<'):
+    elif paml_line.startswith('<'):
         i = add_raw_html(paml_lines, i)
     else:
         print('Unsupported line, skipping: ', paml_lines[i])
