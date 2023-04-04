@@ -3,3 +3,4 @@
 .stfolder
 *.py[cod]
 dist/*
+venv/
