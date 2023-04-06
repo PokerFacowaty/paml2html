@@ -1,4 +1,4 @@
-from src.paml2html import paml2html
+from paml2html import paml2html
 from pathlib import Path
 import unittest
 

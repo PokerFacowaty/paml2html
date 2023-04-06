@@ -1,4 +1,4 @@
-from src.paml2html import paml2html
+from paml2html import paml2html
 import unittest
 
 '''These tests all test the identify_element function (it doesn't return
