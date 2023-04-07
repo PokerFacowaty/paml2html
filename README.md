@@ -1,4 +1,4 @@
-paml2html is a proof-of-concept converter making HTML from [P]oker's M[a]de-up [M]arkup [L]anguage. PaML's docs can be found [here](https://paml.pokerfacowaty.com/). You can also track PaML's & paml2html's development on my [Vikunja list!](https://vikunja.pokerfacowaty.com/share/xSbQeLXtVLmTpqdniQhIjmzLUgdxJwtpUStgIbya/auth)
+paml2html is a converter making HTML from [P]oker's M[a]de-up [M]arkup [L]anguage that's designed to be used [on my website](https://pokerfacowaty.com/) as well as being a fun little learning experience. PaML's docs can be found [here](https://paml.pokerfacowaty.com/). You can also track PaML's & paml2html's development on my [Vikunja list!](https://vikunja.pokerfacowaty.com/share/xSbQeLXtVLmTpqdniQhIjmzLUgdxJwtpUStgIbya/auth)
 
 # Prerequisites
 - [Python 3](https://www.python.org/downloads/)
@@ -6,24 +6,20 @@ paml2html is a proof-of-concept converter making HTML from [P]oker's M[a]de-up [
 
 # Installation
 Download the files
-- Clone the repo:
+- Grab the [latest release](https://github.com/PokerFacowaty/paml2html/releases)
+- Alternatively, since paml2html is [available on PyPI](https://pypi.org/project/paml2html/), if you intend to only use it as as an imported package, you can install it with pip
 ```
-git clone https://github.com/PokerFacowaty/paml2html
+pip install paml2html
 ```
-- ... or simply download `src/paml2html.py`
 
 # Usage
 To use paml2html by itself, simply start it when in the same directory:
+```
+python paml2html.py <source_file> <destination_file>
+```
+(remember to use the relevant Python installation, which might be `python3` or other on your system)
 
-```
-python paml2html.py
-```
-(or if you have Python 2 installed)
-```
-python3 paml2html.py
-```
-
-...or you can also import it and use in a different file with `import paml2html` by calling the `paml2html.convert_from_file()` or `paml2html.convert_from_text()` function and providing a filepath or text
+...or you can also import it and use in a different file with `import paml2html` by calling the `paml2html.convert_from_file()` or `paml2html.convert_from_text()` function and providing a filepath or text accordingly
 
 
 ## Arguments
